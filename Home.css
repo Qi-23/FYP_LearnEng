@@ -1,0 +1,89 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.header {
+    background-color: #3a60ba;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.menu {
+    background-color: #014181;
+    display: flex;
+    justify-content: center;
+}
+
+.menu a {
+    color: white;
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 1.2em;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.menu a:hover {
+    background-color: #012169;
+}
+
+.content {
+    padding: 20px;
+}
+
+.scenario, .summary {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.chatbox {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    height: 200px;
+    overflow-y: scroll;
+    background-color: #f9f9f9;
+}
+
+textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+    box-sizing: border-box;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+button {
+    background-color: #012169;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #014181;
+}
