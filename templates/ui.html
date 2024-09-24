@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat To Learn</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="Box" class="h-100 pt-5 container-fluid">
+        <div class="row justify-content-center h-100">
+
+            <div class="col-md-8 col-xl-6 py-3 card border-0">
+                <div id="messages" class="card-body border border-warning w-100 mb-3 rounded">
+                </div>
+                <div class="d-flex flex-column align-items-center py-3">
+                    <button id="startRecording" class="btn p-5 btn-outline-warning rounded-circle"><i
+                            class="fs-2 bi bi-mic"></i></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="/Athletix/assets/bootstrap.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#startRecording").on("click", function () {
+                // Simulate starting recording (replace with actual recording logic)
+                setTimeout(() => {
+                    // Simulate sending recorded audio data
+                    $.ajax({
+                        url: "/get",
+                        type: "POST",
+                        data: {},  // Include recorded audio data here if needed
+                        success: function (data) {
+                            // Display the user input and response
+                            $("#messages").append(`<div class="d-flex justify-content-end pb-2 pt-2">
+                                                        <div class="msg_cotainer_send align-items-end mr-5 px-3 border border-warning"
+                                                            style="border-radius: 10px;">${data.user_input}</div>
+                                                    </div>`);
+                            $("#messages").append(`<div class="d-flex justify-content-start pb-2 pt-2">
+                                                        <div class="msg_cotainer ml-3 pl-2 pr-2  mr-5 px-3 border border-warning" style="border-radius: 10px;">
+                                                            ${data.response}
+                                                    </div>`);
+
+                            // Play the audio once it is available
+                            if (data.tts_audio_url) {
+                                let audio = new Audio(data.tts_audio_url);
+                                audio.play();
+                            }
+                        },
+                        error: function () {
+                            alert("Error processing the request.");
+                        }
+                    });
+                }, 1000);  // Simulated delay for recording
+            });
+        });
+    </script>
+</body>
+
+</html>
