@@ -44,6 +44,7 @@ CREATE TABLE LevelEditor (
 
 CREATE TABLE Scenario (
   ScenarioID  	INT AUTO_INCREMENT,
+  ScenarioName  VARCHAR(255) NOT NULL,
   ScenarioDescription 	TEXT NOT NULL,
   CharacterDescription 	TEXT NOT NULL,
   LevelID 	INT,
