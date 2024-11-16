@@ -45,8 +45,10 @@ CREATE TABLE LevelEditor (
 CREATE TABLE Scenario (
   ScenarioID  	INT AUTO_INCREMENT,
   ScenarioName  VARCHAR(255) NOT NULL,
+  ScenarioImage TEXT NOT NULL,
   ScenarioDescription 	TEXT NOT NULL,
   CharacterDescription 	TEXT NOT NULL,
+  Vocab         TEXT NOT NULL,
   LevelID 	INT,
   PRIMARY KEY (ScenarioID),
   FOREIGN KEY (LevelID) REFERENCES Level(LevelID)
@@ -54,13 +56,13 @@ CREATE TABLE Scenario (
 
 CREATE TABLE VirtualCharacter (
   CharacterID 	INT AUTO_INCREMENT,
-  CharactereName 	VARCHAR(255) NOT NULL,
+  CharacterName 	VARCHAR(255) NOT NULL,
   CharacterRole 	VARCHAR(255) NOT NULL,
   CharacterLook 	TEXT,
   Characteristics 	TEXT,
   ReferenceImage 	VARCHAR(255),
   VoiceID 	INT,
-  ScenarioID 	INT,
+  ScenarioID 	INT NOT NULL,
   PRIMARY KEY (CharacterID),
   FOREIGN KEY (VoiceID) REFERENCES Voice(VoiceID),
   FOREIGN KEY (ScenarioID) REFERENCES Scenario(ScenarioID)
