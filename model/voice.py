@@ -16,7 +16,7 @@ class Voice:
         self._name = name
         self._gender = gender        # f/m
         self._filePath = filePath
-        self._editor = editor if isinstance(editor, Editor) else self.getEditor(self, editor)
+        self._editor = editor if isinstance(editor, Editor) else self.getEditor(editor)
 
     def getEditor(self, editor=None):
         if editor is None:
@@ -38,7 +38,7 @@ class Voice:
             name = result['VoiceName']
             gender = result['VoiceGender']
             file = result['VoiceFile']
-            editor = self.getEditor(self, result['EditorID'])
+            editor = result['EditorID']
 
             voiceObj = Voice(name, gender, file, editor, id)
             return voiceObj
@@ -51,7 +51,7 @@ class Voice:
                     name = each['VoiceName']
                     gender = each['VoiceGender']
                     file = each['VoiceFile']
-                    editor = self.getEditor(self, each['EditorID'])
+                    editor = each['EditorID']
 
                     voiceObj = Voice(name, gender, file, editor, id)
                     voiceObjList.append(voiceObj)

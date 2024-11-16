@@ -3,8 +3,19 @@ from http.server import HTTPServer
 import importlib
 from flask import Flask
 import os
+
 from controllers.scenario_controller import scenario_controller  # Import user_controller blueprint
 from controllers.user_controller import user_controller  # Import user_controller blueprint
+from dao.dbConnection import DBConnection
+
+from model.level import Level
+from model.scenario import Scenario
+from model.editor import Editor
+from model.voice import Voice
+from model.virtualCharacter import VirtualCharacter
+from model.learner import Learner
+from model.learnerScenario import LearnerScenario
+from model.summary import Summary
 
 app = Flask(__name__)
 
@@ -21,6 +32,19 @@ for filename in os.listdir(controllers_dir):
         if hasattr(module, 'controller_blueprint'):
             # print(module.controller_blueprint)
             app.register_blueprint(module.controller_blueprint, url_prefix=f'/{filename[:-14]}')
+
+DBConnection.connect()
+
+# print("Scenario: ")
+result_one = Voice.fetch_by_id(1)
+result_all = Voice.fetch_all()
+i = 0
+print()
+for each in result_all:
+    print(each)
+    print()
+
+print(f"\n{result_one}\n")
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -22,8 +22,8 @@ class VirtualCharacter:
         self._lookDesc = look
         self._characteristicsDesc = characteristics
         self._referenceImage = referenceImage    #image path
-        self._voice = voice if isinstance(voice, Voice) else self.getLevel(self, voice)                    #voice object
-        self._scenario = scenario if isinstance(scenario, Scenario) else self.getScenario(self, scenario)
+        self._voice = voice if isinstance(voice, Voice) else self.getVoice(voice)
+        self._scenario = scenario if isinstance(scenario, Scenario) else self.getScenario(scenario)
 
     def getVoice(self, voice=None):
         if voice is None:
@@ -58,8 +58,8 @@ class VirtualCharacter:
             look = result['CharacterLook']
             characteristics = result['Characteristics']
             image = result['ReferenceImage']
-            voice = self.getVoice(self, result['VoiceID'])
-            scenario = self.getScenario(self, result['ScenarioID'])
+            voice = result['VoiceID']
+            scenario = result['ScenarioID']
 
             virtualCharacterObj = VirtualCharacter(name, role, look, characteristics, image, voice, scenario, id)
             return virtualCharacterObj
@@ -74,8 +74,8 @@ class VirtualCharacter:
                     look = each['CharacterLook']
                     characteristics = each['Characteristics']
                     image = each['ReferenceImage']
-                    voice = self.getVoice(self, each['VoiceID'])
-                    scenario = self.getScenario(self, each['ScenarioID'])
+                    voice = each['VoiceID']
+                    scenario = each['ScenarioID']
 
                     virtualCharacterObj = VirtualCharacter(name, role, look, characteristics, image, voice, scenario, id)
                     virtualCharacterObjList.append(virtualCharacterObj)

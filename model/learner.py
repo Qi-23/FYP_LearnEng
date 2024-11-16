@@ -16,7 +16,7 @@ class Learner:
         self._profilePicture = profilePicture
         self._username = username
         self._password = password
-        self._level = level if isinstance(level, Level) else self.getLevel(self, level)
+        self._level = level if isinstance(level, Level) else self.getLevel(level)
 
     def getLevel(self, level=None):
         if level is None:
@@ -38,7 +38,7 @@ class Learner:
             profilePicture = result['ProfilePicture']
             username = result['Username']
             password = result['Password']
-            level = self.getLevel(self, result['LevelID'])
+            level = result['LevelID']
 
             learnerObj = Learner(profilePicture, username, password, level, id)
             return learnerObj
@@ -51,7 +51,7 @@ class Learner:
                     profilePicture = each['ProfilePicture']
                     username = each['Username']
                     password = each['Password']
-                    level = self.getLevel(self, each['LevelID'])
+                    level = each['LevelID']
 
                     learnerObj = Learner(profilePicture, username, password, level, id)
                     learnerObjList.append(learnerObj)
@@ -71,7 +71,6 @@ class Learner:
         queryId = f"SELECT * FROM {self._tableName} WHERE {self._idCol} = {search_id}"
         result = DBConnection.fetch_one(queryId)
 
-        print(f"SELECT * FROM {self._tableName} WHERE {self._idCol} = {search_id}")
         learnerObj = self.create_learnerObj(self, result)
         return learnerObj
     

@@ -20,7 +20,7 @@ class Scenario:
         self._scenarioDesc = scenarioDesc
         self._characterDesc = characterDesc
         self._vocab = vocab
-        self._level = level if isinstance(level, Level) else self.getLevel(self, level)
+        self._level = level if isinstance(level, Level) else self.getLevel(level)
 
     def setName(self, name):
         self._name = name
@@ -62,7 +62,7 @@ class Scenario:
             scenarioDesc = result['ScenarioDescription']
             characterDesc = result['CharacterDescription']
             vocab = result['Vocab']
-            level = self.getLevel(self, result['LevelID'])
+            level = result['LevelID']
 
             scenarioObj = Scenario(name, image, scenarioDesc, characterDesc, vocab, level, id)
             return scenarioObj
@@ -77,7 +77,7 @@ class Scenario:
                     scenarioDesc = each['ScenarioDescription']
                     characterDesc = each['CharacterDescription']
                     vocab = each['Vocab']
-                    level =  self.getLevel(self, each['LevelID'])
+                    level =  each['LevelID']
 
                     scenarioObj = Scenario(name, image, scenarioDesc, characterDesc, vocab, level, id)
                     scenarioObjList.append(scenarioObj)
