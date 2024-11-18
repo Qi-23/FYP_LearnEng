@@ -4,10 +4,10 @@ import importlib
 from flask import Flask
 import os
 
-from controllers.scenario_controller import scenario_controller  # Import user_controller blueprint
-from controllers.user_controller import user_controller  # Import user_controller blueprint
 from dao.dbConnection import DBConnection
+from controllers.scenario_controller import scenario_controller  # Import scenario_controller blueprint
 
+# import the classes / model
 from model.level import Level
 from model.scenario import Scenario
 from model.editor import Editor
@@ -35,7 +35,9 @@ for filename in os.listdir(controllers_dir):
 
 DBConnection.connect()
 
-# print("Scenario: ")
+# testing start here -------------------------------------------------------------------------------
+
+# try run (change the class name to test)
 result_one = Voice.fetch_by_id(1)
 result_all = Voice.fetch_all()
 i = 0
@@ -46,5 +48,7 @@ for each in result_all:
 
 print(f"\n{result_one}\n")
 
+
+# Flask connection
 if __name__ == '__main__':
     app.run(debug=True)
