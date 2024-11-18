@@ -6,8 +6,8 @@ class DBConnection:
 
     _connection = None
     _host = "localhost"
-    _user = "qi"
-    _password = "2310"
+    _user = "user_name"         # change to your own user's name
+    _password = "password"      # change to your the user's password
     _database = "learnengdb"
 
     @classmethod
