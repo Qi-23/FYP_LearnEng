@@ -1,4 +1,6 @@
-# voice_assistant/main.py
+# ../voice_samples/run_voice_assistant.py
+
+# run_voice_assistant.py
 
 import logging
 import time
@@ -11,36 +13,27 @@ from voice_assistant.utils import delete_file
 from voice_assistant.config import Config
 from voice_assistant.api_key_manager import get_transcription_api_key, get_response_api_key, get_tts_api_key
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
 # Initialize colorama
 init(autoreset=True)
 
-import threading
-
-def filter_brackets(text):
-    import re
-    return re.sub(r'[\(\[].*?[\)\]]|\*.*?\*', '', text)
-
-def main():
+def main(chat_history):
     """
     Main function to run the voice assistant.
     """
-    chat_history = [
-        {"role": "system", "content": """ You are a 27-year-old hotel staff member 
+    chat_history.append({
+        "role": "system",
+        "content": """ You are a 27-year-old hotel staff member 
          called Joseph working at the hotel front desk. You are warm, welcoming, 
          patient, and highly professional, always eager to assist guests with their needs. 
          You take pride in delivering excellent customer service and ensures that 
          every guest feels comfortable and well-taken care of. 
-         You will help the users with their requests.
-         Your answers are short and concise. """}
-    ]
+         You will help the users with their booking room requests.
+         Your answers are short and concise. """
+    })
 
     # Generate an initial response from the assistant
     initial_response_api_key = get_response_api_key()
     initial_response_text = generate_response(Config.RESPONSE_MODEL, initial_response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
-    initial_response_text = filter_brackets(initial_response_text)
     logging.info(Fore.CYAN + "Initial Response: " + initial_response_text + Fore.RESET)
 
     # Append the assistant's initial response to the chat history
@@ -67,47 +60,48 @@ def main():
 
     while True:
         try:
-            # Record audio from the microphone and save it as 'test.wav'
-            record_audio(Config.INPUT_AUDIO)
+            # Record audio from the microphone
+            record_audio(Config.INPUT_AUDIO, timeout=30, phrase_time_limit=30)  
 
-            # Get the API key for transcription
+            
             transcription_api_key = get_transcription_api_key()
             
-            # Transcribe the audio file
+            
             user_input = transcribe_audio(Config.TRANSCRIPTION_MODEL, transcription_api_key, Config.INPUT_AUDIO, Config.LOCAL_MODEL_PATH)
 
-            # Check if the transcription is empty and restart the recording if it is. This check will avoid empty requests if vad_filter is used in the fastwhisperapi.
-            if not user_input:
-                logging.info("No transcription was returned. Starting recording again.")
+            # Check if the transcription is empty or contains default phrases
+            if not user_input or user_input.strip().lower() in ["thank you", "thanks", "thank you."]:
+                logging.info("No valid transcription was returned. Starting recording again.")
                 continue
+
             logging.info(Fore.GREEN + "You said: " + user_input + Fore.RESET)
 
-            # Define multiple phrases to end the chat
+            # Phrases to end the chat
             exit_phrases = ["goodbye", "bye", "see you", "exit", "thank you", "end"]
             if any(phrase in user_input.lower() for phrase in exit_phrases):
+                chat_history.append({"role": "user", "content": user_input})
                 break
 
             # Append the user's input to the chat history
             chat_history.append({"role": "user", "content": user_input})
 
-            # Get the API key for response generation
+            
             response_api_key = get_response_api_key()
 
-            # Generate a response
+            # Generate response
             response_text = generate_response(Config.RESPONSE_MODEL, response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
-            response_text = filter_brackets(response_text)
             logging.info(Fore.CYAN + "Response: " + response_text + Fore.RESET)
 
             # Append the assistant's response to the chat history
             chat_history.append({"role": "assistant", "content": response_text})
 
-            # Determine the output file format based on the TTS model
+            # Determine the output file format based on TTS model
             if Config.TTS_MODEL == 'openai' or Config.TTS_MODEL == 'elevenlabs' or Config.TTS_MODEL == 'melotts' or Config.TTS_MODEL == 'cartesia':
                 output_file = 'output.mp3'
             else:
                 output_file = 'output.wav'
 
-            # Get the API key for TTS
+            
             tts_api_key = get_tts_api_key()
 
             # Convert the response text to speech and save it to the appropriate file

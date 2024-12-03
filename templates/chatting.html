@@ -167,20 +167,26 @@
             color: #5180e6;
             box-shadow: 0 4px 6px #a8a8a8;
         }
+
+        .summary-btn.disabled {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="icons">
-            <a href="level_page.html">
-                <img src="/page_photo/back.png" alt="Back">
+            <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='page_photo/back.png') }}" alt="Back">
             </a>
             <div class="level-indicator">EASY</div>
         </div>
         <div class="title">Scenario 1 - Booking Room</div>
         <div class="icons">
-            <img src="/page_photo/home.png" alt="Home">
-            <img src="/page_photo/user.png" alt="Profile">
+            <img src="{{ url_for('static', filename='page_photo/home.png') }}" alt="Home">
+            <img src="{{ url_for('static', filename='page_photo/user.png') }}" alt="Profile">
         </div>
     </div>
 
@@ -198,9 +204,45 @@
 
             <!-- Summary Button -->
             <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
-                <a href="summary.html" class="summary-btn">SUMMARY</a>
+                <a href="summary.html" class="summary-btn" id="summaryBtn">Summary</a>
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let chatEnded = false;
+
+            // Start the chat
+            $.post('/start_chat', function(data) {
+                console.log(data.status);
+            });
+
+            // Fetch and display chat history every second
+            setInterval(function() {
+                $.get('/get_chat_history', function(data) {
+                    $('#chatArea').empty();
+                    data.forEach(function(message) {
+                        if (message.role !== 'system') {  // Exclude system message
+                            var bubbleClass = message.role === 'user' ? 'user' : 'ai';
+                            $('#chatArea').append('<div class="chat-bubble ' + bubbleClass + '">' + message.content + '</div>');
+                        }
+                    });
+                    // Scroll to the bottom of the chat area
+                    $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
+
+                    // Check if the chat has ended
+                    if (data.length > 0 && data[data.length - 1].role === 'user' && data[data.length - 1].content.toLowerCase().includes('goodbye')) {
+                        chatEnded = true;
+                        $('#summaryBtn').removeClass('disabled');
+                    } else {
+                        chatEnded = false;
+                        $('#summaryBtn').addClass('disabled');
+                    }
+                });
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
