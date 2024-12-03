@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "soundFile": "C:\\Users\\jeanl\\Desktop\\FYP_LearnEng\\learneng_vite\\public\\audios\\response.wav",
+    "duration": 3.53
+  },
+  "mouthCues": [
+    { "start": 0.00, "end": 0.07, "value": "X" },
+    { "start": 0.07, "end": 0.11, "value": "B" },
+    { "start": 0.11, "end": 0.22, "value": "D" },
+    { "start": 0.22, "end": 0.36, "value": "B" },
+    { "start": 0.36, "end": 0.57, "value": "C" },
+    { "start": 0.57, "end": 0.64, "value": "B" },
+    { "start": 0.64, "end": 0.71, "value": "E" },
+    { "start": 0.71, "end": 0.78, "value": "F" },
+    { "start": 0.78, "end": 0.85, "value": "B" },
+    { "start": 0.85, "end": 0.92, "value": "C" },
+    { "start": 0.92, "end": 1.06, "value": "B" },
+    { "start": 1.06, "end": 1.14, "value": "A" },
+    { "start": 1.14, "end": 1.20, "value": "F" },
+    { "start": 1.20, "end": 1.26, "value": "C" },
+    { "start": 1.26, "end": 1.33, "value": "H" },
+    { "start": 1.33, "end": 1.75, "value": "B" },
+    { "start": 1.75, "end": 1.82, "value": "G" },
+    { "start": 1.82, "end": 1.89, "value": "F" },
+    { "start": 1.89, "end": 2.10, "value": "C" },
+    { "start": 2.10, "end": 2.24, "value": "E" },
+    { "start": 2.24, "end": 2.31, "value": "H" },
+    { "start": 2.31, "end": 2.38, "value": "C" },
+    { "start": 2.38, "end": 2.46, "value": "A" },
+    { "start": 2.46, "end": 2.68, "value": "C" },
+    { "start": 2.68, "end": 3.17, "value": "B" },
+    { "start": 3.17, "end": 3.24, "value": "F" },
+    { "start": 3.24, "end": 3.31, "value": "B" },
+    { "start": 3.31, "end": 3.45, "value": "C" },
+    { "start": 3.45, "end": 3.52, "value": "B" },
+    { "start": 3.52, "end": 3.53, "value": "X" }
+  ]
+}
