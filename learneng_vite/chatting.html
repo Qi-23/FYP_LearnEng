@@ -1,0 +1,314 @@
+<!-- /templates/chatting.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Speaking Practice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Body */
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f0f4fd;
+        }
+
+        /* Header */
+        .header {
+            width: 100%;
+            height: 10%;
+            max-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            background-color: #799DEC;
+            color: #fff;
+        }
+
+        .header .title {
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .header .icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .header .icons img {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-right: 10px;
+            filter: brightness(0) invert(1);
+        }
+
+        .header .icons img:hover {
+            transform: scale(1.1);
+        }
+
+        .header .level-indicator {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 3px 8px;
+            margin-left: 10px;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            height: 90%;
+            overflow: hidden;
+        }
+
+        /* AI Character */
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f4fd;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        .ai-character {
+            width: 70%;
+            height: auto;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 2px solid #799DEC;
+        }
+
+        .ai-name {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .ai-description {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Chat Area */
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #f0f4fd;
+            padding: 20px;
+        }
+
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-bubble {
+            padding: 10px 15px;
+            border-radius: 15px;
+            margin: 5px 0;
+            max-width: 80%;
+            font-size: 1rem;
+        }
+
+        .chat-bubble.user {
+            background-color: #799DEC;
+            color: #fff;
+            margin-left: auto;
+        }
+
+        .chat-bubble.ai {
+            background-color: #e0e8f9;
+            color: #333;
+            margin-right: auto;
+        }
+
+        /* Summary Button */
+        .summary-btn {
+            display: inline-block;
+            background-color: #799DEC;
+            color: #fff;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .summary-btn:hover {
+            background-color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="icons">
+            <a href="level_page.html">
+                <img src="/page_photo/back.png" alt="Back">
+            </a>
+            <div class="level-indicator">Easy</div>
+        </div>
+        <div class="title">Scenario 1 - Booking Room</div>
+        <div class="icons">
+            <img src="/page_photo/home.png" alt="Home">
+            <img src="/page_photo/user.png" alt="Profile">
+        </div>
+    </div>
+
+    <div class="main-container d-flex justify-content-center">
+        <div class="left-panel col-6">
+            <!-- AI Character -->
+            <div id="root"></div>
+            <div class="ai-name">Joseph</div>
+            <div class="ai-description">Description</div>
+        </div>
+
+        <div class="right-panel col-6">
+            <!-- Chat Area -->
+            <div class="chat-area" id="chatArea">
+                <text_area id="convert_text"></text_area>
+            </div>
+
+            <!-- Summary Button -->
+            <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+                <a href="summary.html" class="summary-btn">Summary</a>
+                <!-- <button type="button" id="record" class="btn btn-outline-primary">Button</button>
+                <button type="button" id="stop" class="btn btn-outline-primary">stop</button> -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.jsx"></script>
+
+    <script>
+        $('document').ready(function () {
+
+            let silenceTimeout;
+            let mediaRecorder;
+            let audioChunks = [];
+
+            // Start recording with silence detection
+            const startRecordingWithSilenceTimeout = async () => {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const audioContext = new AudioContext();
+                const analyser = audioContext.createAnalyser();
+                const source = audioContext.createMediaStreamSource(stream);
+                source.connect(analyser);
+
+                const data = new Float32Array(analyser.fftSize);
+                audioChunks = [];
+
+                // Start MediaRecorder
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = (event) => audioChunks.push(event.data);
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+
+                    if (audioChunks.length === 0) {
+                        // If no audio captured, post an empty message
+                        console.log("Posting empty message...");
+                        // await postMessage({ message: "" }); 
+
+                    } else {
+                        // If audio captured, post with the audio
+                        console.log("Posting audio...");
+                        // await postAudio(audioBlob);
+
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        const audio = new Audio(audioUrl);
+                        audio.controls = true;
+                        $("#convert_text").html(audio); // Append audio element to the DOM
+                    }
+                };
+
+                mediaRecorder.start();
+
+                let silenceStartTime = null;
+
+                // Silence detection logic
+                const checkSilence = () => {
+                    analyser.getFloatTimeDomainData(data);
+                    const isSilent = data.every((sample) => Math.abs(sample) < 0.01);
+
+                    if (isSilent) {
+                        if (!silenceStartTime) {
+                            silenceStartTime = performance.now();
+                        } else if (performance.now() - silenceStartTime > 10000) {
+                            // If silence lasts more than 10 seconds
+                            console.log("Silence detected for 10 seconds, stopping recording...");
+                            stopRecording();
+                            return; 
+                        }
+                        silenceTimeout = setTimeout(stopRecording, 10000); // Stop after 10 seconds of silence
+                    } else {
+                        silenceStartTime = null;
+                    }
+
+                    requestAnimationFrame(checkSilence);
+                };
+
+                checkSilence();
+                console.log("Recording started...");
+            };
+
+            const stopRecording = () => {
+                if (mediaRecorder && mediaRecorder.state === "recording") {
+                    mediaRecorder.stop();
+                    console.log("Recording stopped");
+                }
+            };
+
+            // let record = $("#record")[0];
+            // let stopRecord = $("#stop")[0];
+
+            // record.addEventListener("click", async function () {
+            //     startRecordingWithSilenceTimeout();
+            // });
+
+            // stopRecord.addEventListener("click", function () {
+            //     stopRecording();
+            // });
+        });
+
+
+    </script>
+</body>
+
+</html>
