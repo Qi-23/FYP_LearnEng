@@ -52,7 +52,7 @@ def main(chat_history):
         play_audio(initial_output_file)
 
     # Clean up initial audio file
-    delete_file(initial_output_file)
+    # delete_file(initial_output_file)
 
     while True:
         try:
@@ -93,9 +93,9 @@ def main(chat_history):
 
             # Determine the output file format based on TTS model
             if Config.TTS_MODEL == 'openai' or Config.TTS_MODEL == 'elevenlabs' or Config.TTS_MODEL == 'melotts' or Config.TTS_MODEL == 'cartesia':
-                output_file = 'output.mp3'
+                output_file = '../learneng_vite/public/audios/output.mp3'
             else:
-                output_file = 'output.wav'
+                output_file = '../learneng_vite/public/audios/output.wav'
 
             
             tts_api_key = get_tts_api_key()
@@ -109,7 +109,7 @@ def main(chat_history):
             
             # Clean up audio files
             delete_file(Config.INPUT_AUDIO)
-            delete_file(output_file)
+            # delete_file(output_file)
 
         except Exception as e:
             logging.error(Fore.RED + f"An error occurred: {e}" + Fore.RESET)
