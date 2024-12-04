@@ -5,37 +5,35 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import os
 
-from dao.dbConnection import DBConnection
-from controllers.scenario_controller import scenario_controller  # Import scenario_controller blueprint
+# from dao.dbConnection import DBConnection
+# from controllers.scenario_controller import scenario_controller  # Import scenario_controller blueprint
 
 # import the classes / model
-from model.level import Level
-from model.scenario import Scenario
-from model.editor import Editor
-from model.voice import Voice
-from model.virtualCharacter import VirtualCharacter
-from model.learner import Learner
-from model.learnerScenario import LearnerScenario
-from model.summary import Summary
+# from model.level import Level
+# from model.scenario import Scenario
+# from model.editor import Editor
+# from model.voice import Voice
+# from model.virtualCharacter import VirtualCharacter
+# from model.learner import Learner
+# from model.learnerScenario import LearnerScenario
+# from model.summary import Summary
 
 app = Flask(__name__)
 CORS(app)
 
-controllers_dir = './controllers'
-# app.register_blueprint(scenario_controller, url_prefix='/scenario')
-# app.register_blueprint(user_controller, url_prefix='/user')
+# controllers_dir = './controllers'
 
-for filename in os.listdir(controllers_dir):
+# for filename in os.listdir(controllers_dir):
   
-    if filename.endswith('_controller.py'):
-        module_name = f'controllers.{filename[:-3]}'
-        module = importlib.import_module(module_name)
+#     if filename.endswith('_controller.py'):
+#         module_name = f'controllers.{filename[:-3]}'
+#         module = importlib.import_module(module_name)
 
-        if hasattr(module, 'controller_blueprint'):
-            # print(module.controller_blueprint)
-            app.register_blueprint(module.controller_blueprint, url_prefix=f'/{filename[:-14]}')
+#         if hasattr(module, 'controller_blueprint'):
+#             # print(module.controller_blueprint)
+#             app.register_blueprint(module.controller_blueprint, url_prefix=f'/{filename[:-14]}')
 
-DBConnection.connect()
+# DBConnection.connect()
 
 @app.route("/api/chat", methods=['GET'])
 def return_chat(): 
