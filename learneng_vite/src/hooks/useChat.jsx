@@ -10,7 +10,6 @@ export const ChatProvider = ({ children }) => {
 
   const getResponse = async (type) => {
     setNextChat(false);
-    console.log("Processing chat : " + type);
     const response = await fetch("/api/ChatBackend", {
       method: 'POST',
       headers: {

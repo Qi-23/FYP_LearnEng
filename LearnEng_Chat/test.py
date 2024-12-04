@@ -20,14 +20,11 @@ chat_history = []
 # def index():
 #     return render_template('chatting.html')
 
-from colorama import Fore, init
-
 @app.route('/start_chat', methods=['POST'])
 def start_chat():
     global chat_history
     chat_history = []
     initial_output_file = initialize_chat(chat_history, )
-    logging.info(Fore.GREEN + "Initial: " + initial_output_file)
     audio_name, audio_type = os.path.splitext(initial_output_file)
     return jsonify({"audio_name": audio_name, "audio_type" : audio_type})
     
@@ -35,7 +32,6 @@ def start_chat():
 def next_chat():
     global chat_history
     output_file = continue_chat(chat_history, )
-    logging.info(Fore.GREEN + "Response: " + output_file)
     audio_name, audio_type = os.path.splitext(output_file)
     return jsonify({"audio_name": audio_name, "audio_type" : audio_type})
 

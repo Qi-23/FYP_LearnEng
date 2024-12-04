@@ -38,7 +38,6 @@ export function Character(props) {
       setAnimation("Idle");
       return;
     }
-    console.log(message);
     setLipsync(message.lipsync);
     const audio = new Audio("data:audio/mp3;base64," + message.audio);
     audio.play();

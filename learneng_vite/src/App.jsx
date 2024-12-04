@@ -12,18 +12,13 @@ function App() {
   const [init, setInit] = useState();
 
   useEffect(() => {
-    console.log("Init conversation")
     getResponse("init");
     setInit(true);
   }, []);
 
   useEffect(() => {
-    console.log("nextchat");
     if (nextChat) {
-      console.log("start conversation")
       getResponse("cont");
-    } else {
-      console.log("end conversation")
     }
   }, [nextChat])
 

@@ -33,7 +33,6 @@ export const audioFileToBase64 = async (file) => {
 export const lipSyncMessage = async (message, audioType) => {
     const time = new Date().getTime();
     console.log(`Starting conversion for message ${message}`);
-    console.log("Current working directory:", process.cwd());
 
     if (audioType == ".mp3") {
         await execCommand(
