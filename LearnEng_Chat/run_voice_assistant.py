@@ -12,7 +12,10 @@ from voice_assistant.config import Config
 from voice_assistant.api_key_manager import get_transcription_api_key, get_response_api_key, get_tts_api_key
 
 
-def main(chat_history):
+status = "none"
+def initialize_chat(chat_history):
+    global status
+    status = "processing"
     """
     Main function to run the voice assistant.
     """
@@ -37,9 +40,11 @@ def main(chat_history):
 
     # Determine the output file format based on the TTS model
     if Config.TTS_MODEL == 'openai' or Config.TTS_MODEL == 'elevenlabs' or Config.TTS_MODEL == 'melotts' or Config.TTS_MODEL == 'cartesia':
-        initial_output_file = 'initial_output.mp3'
+        initial_output_file_name = 'initial_output.mp3'
     else:
-        initial_output_file = 'initial_output.wav'
+        initial_output_file_name = 'initial_output.mp3'
+
+    initial_output_file = '../learneng_vite/public/audios/' + initial_output_file_name
 
     # Get the API key for TTS
     initial_tts_api_key = get_tts_api_key()
@@ -48,78 +53,93 @@ def main(chat_history):
     text_to_speech(Config.TTS_MODEL, initial_tts_api_key, initial_response_text, initial_output_file, Config.LOCAL_MODEL_PATH)
 
     # Play the initial generated speech audio
-    if Config.TTS_MODEL != "cartesia":
-        play_audio(initial_output_file)
+    # if Config.TTS_MODEL != "cartesia":
+    #     play_audio(initial_output_file)
 
     # Clean up initial audio file
     # delete_file(initial_output_file)
+    
+    return initial_output_file_name
 
-    while True:
-        try:
-            # Record audio from the microphone
-            record_audio(Config.INPUT_AUDIO, timeout=30, phrase_time_limit=30)  
+def continue_chat(chat_history):
+    try:
+        global status
+        status = "talking"
+        # Record audio from the microphone
+        record_audio(Config.INPUT_AUDIO, timeout=30, phrase_time_limit=30)  
 
-            
-            transcription_api_key = get_transcription_api_key()
-            
-            
-            user_input = transcribe_audio(Config.TRANSCRIPTION_MODEL, transcription_api_key, Config.INPUT_AUDIO, Config.LOCAL_MODEL_PATH)
+        status = "processing"
+        transcription_api_key = get_transcription_api_key()
+        
+        user_input = transcribe_audio(Config.TRANSCRIPTION_MODEL, transcription_api_key, Config.INPUT_AUDIO, Config.LOCAL_MODEL_PATH)
 
-            # Check if the transcription is empty or contains default phrases
-            if not user_input or user_input.strip().lower() in ["thank you", "thanks", "thank you."]:
-                logging.info("No valid transcription was returned. Starting recording again.")
-                continue
+        # Check if the transcription is empty or contains default phrases
+        if not user_input or user_input.strip().lower() in ["thank you", "thanks", "thank you."]:
+            logging.info("No valid transcription was returned. Starting recording again.")
+            # continue
 
-            logging.info(Fore.GREEN + "You said: " + user_input + Fore.RESET)
+        logging.info(Fore.GREEN + "You said: " + user_input + Fore.RESET)
 
-            # Phrases to end the chat
-            exit_phrases = ["goodbye", "bye", "see you", "exit", "end"]
-            if any(phrase in user_input.lower() for phrase in exit_phrases):
-                chat_history.append({"role": "user", "content": user_input})
-                break
-
-            # Append the user's input to the chat history
+        # Phrases to end the chat
+        exit_phrases = ["goodbye", "bye", "see you", "exit", "end"]
+        if any(phrase in user_input.lower() for phrase in exit_phrases):
             chat_history.append({"role": "user", "content": user_input})
+            # break
+            return
 
-            
-            response_api_key = get_response_api_key()
+        # Append the user's input to the chat history
+        chat_history.append({"role": "user", "content": user_input})
 
-            # Generate response
-            response_text = generate_response(Config.RESPONSE_MODEL, response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
-            logging.info(Fore.CYAN + "Response: " + response_text + Fore.RESET)
+        
+        response_api_key = get_response_api_key()
 
-            # Append the assistant's response to the chat history
-            chat_history.append({"role": "assistant", "content": response_text})
+        # Generate response
+        response_text = generate_response(Config.RESPONSE_MODEL, response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
+        logging.info(Fore.CYAN + "Response: " + response_text + Fore.RESET)
 
-            # Determine the output file format based on TTS model
-            if Config.TTS_MODEL == 'openai' or Config.TTS_MODEL == 'elevenlabs' or Config.TTS_MODEL == 'melotts' or Config.TTS_MODEL == 'cartesia':
-                output_file = '../learneng_vite/public/audios/output.mp3'
-            else:
-                output_file = '../learneng_vite/public/audios/output.wav'
+        # Append the assistant's response to the chat history
+        chat_history.append({"role": "assistant", "content": response_text})
 
-            
-            tts_api_key = get_tts_api_key()
+        # Determine the output file format based on TTS model
+        if Config.TTS_MODEL == 'openai' or Config.TTS_MODEL == 'elevenlabs' or Config.TTS_MODEL == 'melotts' or Config.TTS_MODEL == 'cartesia':
+            output_file_name = 'output.mp3'
+        else:
+            output_file_name = 'output.mp3'
 
-            # Convert the response text to speech and save it to the appropriate file
-            text_to_speech(Config.TTS_MODEL, tts_api_key, response_text, output_file, Config.LOCAL_MODEL_PATH)
+        output_file = '../learneng_vite/public/audios/' + output_file_name
+        tts_api_key = get_tts_api_key()
 
-            # Play the generated speech audio
-            if Config.TTS_MODEL != "cartesia":
-                play_audio(output_file)
-            
-            # Clean up audio files
-            delete_file(Config.INPUT_AUDIO)
-            # delete_file(output_file)
+        # Convert the response text to speech and save it to the appropriate file
+        text_to_speech(Config.TTS_MODEL, tts_api_key, response_text, output_file, Config.LOCAL_MODEL_PATH)
 
-        except Exception as e:
-            logging.error(Fore.RED + f"An error occurred: {e}" + Fore.RESET)
-            delete_file(Config.INPUT_AUDIO)
-            if 'output_file' in locals():
-                delete_file(output_file)
-            time.sleep(1)
+        # Play the generated speech audio
+        # if Config.TTS_MODEL != "cartesia":
+        #     play_audio(output_file)
+        
+        # Clean up audio files
+        delete_file(Config.INPUT_AUDIO)
+        # delete_file(output_file)
 
-if __name__ == "__main__":
-    main()
+        status = "none"
+        return output_file_name
+
+    except Exception as e:
+        logging.error(Fore.RED + f"An error occurred: {e}" + Fore.RESET)
+        delete_file(Config.INPUT_AUDIO)
+        if 'output_file' in locals():
+            delete_file(output_file)
+        time.sleep(1)
+
+def get_chat_status() :
+    global status
+    return status
+
+def update_chat_status(new_status) :
+    global status
+    status = new_status
+
+# if __name__ == "__main__":
+#     main()
 
 # import logging
 # import time

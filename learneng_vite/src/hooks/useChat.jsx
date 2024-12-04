@@ -1,37 +1,50 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-const backendUrl = "http://localhost:5000";
-
 const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
-  const chat = async (message) => {
-    setLoading(true);
-    const data = await fetch(`${backendUrl}/chat`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ message }),
-    });
-    const resp = (await data.json()).messages[0];
-    setMessage(resp);
-    setLoading(false);
-  };
-
   const [message, setMessage] = useState();
   const [loading, setLoading] = useState(false);
+  const [chatStatus, setChatStatus] = useState(false);
+  const [nextChat, setNextChat] = useState();
 
-  const initialResponse = async (message) => {
-    setLoading(true);
-    const response = await fetch("/api/ChatBackend");
+  const getResponse = async (type) => {
+    setNextChat(false);
+    console.log("Processing chat : " + type);
+    const response = await fetch("/api/ChatBackend", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Ensure the correct header
+      },
+      body: JSON.stringify({ response_type: type })
+    });
+
     if (response.ok) {
       const data = await response.json();
       setMessage(data);
       setLoading(false);
+      updateChatStatusToNone();
     }
   };
 
+  const getChatStatus = async () => {
+    const response = await fetch("http://127.0.0.1:5000/get_status", { method: 'GET' });
+    const data = await response.json()
+    let status = data.chat_status;
+    if (status != chatStatus) {
+      setChatStatus(status);
+    }
+  }
+
+  const updateChatStatusToNone = async () => {
+    await fetch("http://127.0.0.1:5000/update_status_to_none", { method: 'POST' });
+  }
+
+  const allowNextChat = () => {
+    if (!nextChat) {
+      setNextChat(true);
+    }
+  }
 
   const onMessagePlayed = () => {
     setMessage(null);  // Reset the message once it's played
@@ -45,14 +58,27 @@ export const ChatProvider = ({ children }) => {
     }
   }, [message]);
 
+  useEffect(() => {
+    if (chatStatus == "none") {
+      setLoading(false);
+    } else if (chatStatus == "talking") {
+      setLoading(false);
+    } else if (chatStatus == "processing") {
+      setLoading(true);
+    }
+  }, [chatStatus]);
+
   return (
     <ChatContext.Provider
       value={{
-        chat,
-        initialResponse,
+        getResponse,
         message,
         onMessagePlayed,
         loading,
+        getChatStatus,
+        chatStatus,
+        allowNextChat,
+        nextChat
       }}
     >
       {children}

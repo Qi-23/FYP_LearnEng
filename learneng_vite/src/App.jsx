@@ -2,14 +2,44 @@ import { Loader } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Leva } from "leva";
 import { Experience } from "./components/Experience";
-import { UI } from "./components/UI";
+import { useChat } from "./hooks/useChat";
+import { useEffect, useState } from "react";
+// import { UI } from "./components/UI";
 
 function App() {
+
+  const { getResponse, loading, message, getChatStatus, allowNextChat, nextChat } = useChat();
+  const [init, setInit] = useState();
+
+  useEffect(() => {
+    console.log("Init conversation")
+    getResponse("init");
+    setInit(true);
+  }, []);
+
+  useEffect(() => {
+    console.log("nextchat");
+    if (nextChat) {
+      console.log("start conversation")
+      getResponse("cont");
+    } else {
+      console.log("end conversation")
+    }
+  }, [nextChat])
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getChatStatus();
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <>
       <Loader />
       <Leva hidden/>
-      <UI/>
+      {/* <UI/> */}
       <Canvas shadows camera={{ position: [0, 0, 1], fov: 6}}>
         <Experience />
       </Canvas>

@@ -12,14 +12,14 @@ const execCommand = (command) => {
 };
 
 export const readJsonTranscript = async (file) => {
-    file = file+'.json';
+    file = file + '.json';
     const data = await fs.readFile(file, "utf8");
     return JSON.parse(data);
 };
 
 export const audioFileToBase64 = async (file) => {
     try {
-        file = file+'.mp3';
+        file = file + '.mp3';
         console.log(`Processing file convert for: ${file}`);
         const data = await fs.readFile(file);
         return data.toString("base64");
@@ -30,14 +30,19 @@ export const audioFileToBase64 = async (file) => {
 };
 
 
-export const lipSyncMessage = async (message) => {
+export const lipSyncMessage = async (message, audioType) => {
     const time = new Date().getTime();
     console.log(`Starting conversion for message ${message}`);
-    await execCommand(
-        `ffmpeg -y -i ${message}.mp3 ${message}.wav`
-        // -y to overwrite the file
-    );
-    console.log(`Conversion done in ${new Date().getTime() - time}ms`);
+    console.log("Current working directory:", process.cwd());
+
+    if (audioType == ".mp3") {
+        await execCommand(
+            `ffmpeg -y -i ${message}.mp3 ${message}.wav`
+            // -y to overwrite the file
+        );
+        console.log(`Conversion done in ${new Date().getTime() - time}ms`);
+    }
+    
     await execCommand(
         `bin\\rhubarb -f json -o ${message}.json ${message}.wav -r phonetic`
     );

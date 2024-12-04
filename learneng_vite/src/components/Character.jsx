@@ -29,7 +29,7 @@ export function Character(props) {
     "/models/maleCharacter.glb"
   );
   
-  const { message, onMessagePlayed, chat } = useChat();
+  const { message, onMessagePlayed, allowNextChat } = useChat();
   const [lipsync, setLipsync] = useState();
   
   useEffect(() => {
@@ -43,7 +43,10 @@ export function Character(props) {
     const audio = new Audio("data:audio/mp3;base64," + message.audio);
     audio.play();
     setAudio(audio);
-    audio.onended = onMessagePlayed;
+    audio.onended = () => {
+      onMessagePlayed();
+      allowNextChat();
+    };
   }, [message]);
   
 

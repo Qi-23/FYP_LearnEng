@@ -181,14 +181,14 @@
     <div class="header">
         <div class="icons">
             <a href="level_page.html">
-                <img src="/public/page_photo/back.png" alt="Back">
+                <img src="page_photo/back.png" alt="Back">
             </a>
             <div class="level-indicator">Easy</div>
         </div>
         <div class="title">Scenario 1 - Booking Room</div>
         <div class="icons">
-            <img src="/public/page_photo/home.png" alt="Home">
-            <img src="/public/page_photo/user.png" alt="Profile">
+            <img src="page_photo/home.png" alt="Home">
+            <img src="page_photo/user.png" alt="Profile">
         </div>
     </div>
 
@@ -209,8 +209,6 @@
             <!-- Summary Button -->
             <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
                 <a href="summary.html" class="summary-btn">Summary</a>
-                <!-- <button type="button" id="record" class="btn btn-outline-primary">Button</button>
-                <button type="button" id="stop" class="btn btn-outline-primary">stop</button> -->
             </div>
         </div>
     </div>
@@ -218,96 +216,38 @@
     <script type="module" src="/src/main.jsx"></script>
 
     <script>
-        $('document').ready(function () {
+        $(document).ready(function () {
+            let chatEnded = false;
 
-            let silenceTimeout;
-            let mediaRecorder;
-            let audioChunks = [];
+            // Start the chat
+            // $.post('http://127.0.0.1:5000/start_chat', function (data) {
+            //     console.log(data.status);
+            // });
 
-            // Start recording with silence detection
-            const startRecordingWithSilenceTimeout = async () => {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                const audioContext = new AudioContext();
-                const analyser = audioContext.createAnalyser();
-                const source = audioContext.createMediaStreamSource(stream);
-                source.connect(analyser);
-
-                const data = new Float32Array(analyser.fftSize);
-                audioChunks = [];
-
-                // Start MediaRecorder
-                mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.ondataavailable = (event) => audioChunks.push(event.data);
-                mediaRecorder.onstop = async () => {
-                    const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-
-                    if (audioChunks.length === 0) {
-                        // If no audio captured, post an empty message
-                        console.log("Posting empty message...");
-                        // await postMessage({ message: "" }); 
-
-                    } else {
-                        // If audio captured, post with the audio
-                        console.log("Posting audio...");
-                        // await postAudio(audioBlob);
-
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        const audio = new Audio(audioUrl);
-                        audio.controls = true;
-                        $("#convert_text").html(audio); // Append audio element to the DOM
-                    }
-                };
-
-                mediaRecorder.start();
-
-                let silenceStartTime = null;
-
-                // Silence detection logic
-                const checkSilence = () => {
-                    analyser.getFloatTimeDomainData(data);
-                    const isSilent = data.every((sample) => Math.abs(sample) < 0.01);
-
-                    if (isSilent) {
-                        if (!silenceStartTime) {
-                            silenceStartTime = performance.now();
-                        } else if (performance.now() - silenceStartTime > 10000) {
-                            // If silence lasts more than 10 seconds
-                            console.log("Silence detected for 10 seconds, stopping recording...");
-                            stopRecording();
-                            return; 
+            // Fetch and display chat history every second
+            setInterval(function () {
+                $.get('http://127.0.0.1:5000/get_chat_history', function (data) {
+                    $('#chatArea').empty();
+                    data.forEach(function (message) {
+                        if (message.role !== 'system') {  // Exclude system message
+                            var bubbleClass = message.role === 'user' ? 'user' : 'ai';
+                            $('#chatArea').append('<div class="chat-bubble ' + bubbleClass + '">' + message.content + '</div>');
                         }
-                        silenceTimeout = setTimeout(stopRecording, 10000); // Stop after 10 seconds of silence
+                    });
+                    // Scroll to the bottom of the chat area
+                    $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
+
+                    // Check if the chat has ended
+                    if (data.length > 0 && data[data.length - 1].role === 'user' && data[data.length - 1].content.toLowerCase().includes('goodbye')) {
+                        chatEnded = true;
+                        $('#summaryBtn').removeClass('disabled');
                     } else {
-                        silenceStartTime = null;
+                        chatEnded = false;
+                        $('#summaryBtn').addClass('disabled');
                     }
-
-                    requestAnimationFrame(checkSilence);
-                };
-
-                checkSilence();
-                console.log("Recording started...");
-            };
-
-            const stopRecording = () => {
-                if (mediaRecorder && mediaRecorder.state === "recording") {
-                    mediaRecorder.stop();
-                    console.log("Recording stopped");
-                }
-            };
-
-            // let record = $("#record")[0];
-            // let stopRecord = $("#stop")[0];
-
-            // record.addEventListener("click", async function () {
-            //     startRecordingWithSilenceTimeout();
-            // });
-
-            // stopRecord.addEventListener("click", function () {
-            //     stopRecording();
-            // });
+                });
+            }, 1000);
         });
-
-
     </script>
 </body>
 

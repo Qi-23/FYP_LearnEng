@@ -5,9 +5,9 @@ import { ChatProvider } from "./hooks/useChat";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <ChatProvider>
       <App />
     </ChatProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

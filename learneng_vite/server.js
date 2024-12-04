@@ -1,6 +1,6 @@
 import express from 'express';
 import { createServer } from 'vite';
-import { chatBackend } from './src/api/ChatBackend.js';
+import { ChatBackend } from './src/api/ChatBackend.js';
 
 const app = express();
 const port = 5137;
@@ -13,8 +13,8 @@ async function startVite() {
 
   // Define your API route
   app.use(express.json()); // To parse JSON request bodies
-  app.post('/api/ChatBackend', chatBackend);
-  app.get('/api/ChatBackend', chatBackend);
+  app.post('/api/ChatBackend', ChatBackend);
+  app.get('/api/ChatBackend', ChatBackend);
 
 
   // Use Vite's middleware to serve the frontend
