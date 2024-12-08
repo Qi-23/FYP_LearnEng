@@ -137,7 +137,8 @@ cython_debug/
 *.wav
 
 # log
-/learneng_vite/node_modules/
+node_modules/
+bin/
 
 # Exception for voice_samples
 !voice_samples/*.mp3
