@@ -138,7 +138,6 @@ cython_debug/
 
 # log
 node_modules/
-bin/
 
 # Exception for voice_samples
 !voice_samples/*.mp3
