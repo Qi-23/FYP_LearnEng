@@ -10,6 +10,7 @@ import { Character } from "./Character";
 const Dots = (props) => {
   const { loading } = useChat();
   const [loadingText, setLoadingText] = useState("");
+  const response = useRef("");
 
   useEffect(() => {
     if (loading) {
@@ -24,6 +25,18 @@ const Dots = (props) => {
       return () => clearInterval(interval);
     } else {
       setLoadingText("");
+
+      $.get('http://127.0.0.1:5000/get_new_response', function (data) {
+        if (response.current != data.new_response && data.new_response != '') {
+            // console.log(data.new_response);
+            response.current = data.new_response;
+
+            $('#chatArea').append('<div class="chat-bubble ' + 'ai' + '">' + response.current + '</div>');
+            // Scroll to the bottom of the chat area
+            $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
+        }
+        
+    });
     }
   }, [loading]);
 

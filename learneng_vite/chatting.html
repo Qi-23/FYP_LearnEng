@@ -201,12 +201,12 @@
 
         .btn-summary:hover {
             background-color: #99ace9;
-            color:#f7faff;
+            color: #f7faff;
         }
 
         .btn-summary:active {
             background-color: #687dc2;
-            color:#f7faff;
+            color: #f7faff;
         }
     </style>
 </head>
@@ -246,7 +246,7 @@
                     id="btn-showSummaryContent" disabled>Summary</button>
             </div>
         </div>
-        
+
         <div class="modal fade" id="summarize" tabindex="-1" role="dialog" aria-labelledby="summarizeTitle"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -260,7 +260,8 @@
                     <div class="modal-body" id="summarizedContent" style="max-height: 60vh; overflow-y: auto;">
                     </div>
                     <div class="modal-footer justify-content-center">
-                        <button type="button" id="btn-summarize_again" class="w-25 btn btn-summary rounded-pill">Summarize Again</button>
+                        <button type="button" id="btn-summarize_again"
+                            class="w-25 btn btn-summary rounded-pill">Summarize Again</button>
                         <!-- <button type="button" class="btn btn-summary rounded-pill" data-bs-dismiss="modal">Close</button> -->
                     </div>
                 </div>
@@ -285,31 +286,67 @@
             // $.post('http://127.0.0.1:5000/start_chat', function (data) {
             //     console.log(data.status);
             // });
+            $.post('http://127.0.0.1:5000/empty', function (data) {
+                console.log(data.status);
+            });
 
             // Fetch and display chat history every second
-            setInterval(function () {
-                $.get('http://127.0.0.1:5000/get_chat_history', function (data) {
-                    $('#chatArea').empty();
-                    data.forEach(function (message) {
-                        if (message.role !== 'system') {  // Exclude system message
-                            var bubbleClass = message.role === 'user' ? 'user' : 'ai';
-                            $('#chatArea').append('<div class="chat-bubble ' + bubbleClass + '">' + message.content + '</div>');
+            let user_input = "";
+            let response = "";
+            $('#chatArea').empty();
+            setTimeout(function () {
+                setInterval(function () {
+                    $.get('http://127.0.0.1:5000/get_user_input', function (data) {
+                        if (user_input != data.new_user_input && data.new_user_input != '') {
+                            // console.log(data.new_user_input);
+                            user_input = data.new_user_input;
+
+                            $('#chatArea').append('<div class="chat-bubble ' + 'user' + '">' + user_input + '</div>');
+                            // Scroll to the bottom of the chat area
+                            $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
                         }
+
+                        // // Check if the chat has ended
+                        // if (data.length > 0 && data[data.length - 1].role === 'user' && data[data.length - 1].content.toLowerCase().includes('goodbye')) {
+                        //     chatEnded = true;
+                        //     $('#summaryBtn').removeClass('disabled');
+                        // } else {
+                        //     chatEnded = false;
+                        //     $('#summaryBtn').addClass('disabled');
+                        // }
                     });
-                    // Scroll to the bottom of the chat area
-                    $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
+                }, 1000);
+            }, 10000);
 
-                    // Check if the chat has ended
-                    if (data.length > 0 && data[data.length - 1].role === 'user' && data[data.length - 1].content.toLowerCase().includes('goodbye')) {
-                        chatEnded = true;
-                        $('#summaryBtn').removeClass('disabled');
-                    } else {
-                        chatEnded = false;
-                        $('#summaryBtn').addClass('disabled');
-                    }
-                });
-            }, 1000);
+            // setTimeout(function () {
+            //     setInterval(function () {
 
+            //     }, 1000);
+            // }, 10000);
+
+            // setInterval(function () {
+            //     $.get('http://127.0.0.1:5000/get_chat_history', function (data) {
+            //         $('#chatArea').empty();
+            //         data.forEach(function (message) {
+            //             if (message.role !== 'system') {  // Exclude system message
+            //                 var bubbleClass = message.role === 'user' ? 'user' : 'ai';
+            //                 $('#chatArea').append('<div class="chat-bubble ' + bubbleClass + '">' + message.content + '</div>');
+            //                 // console.log(bubbleClass + ": " + message.content);
+            //             }
+            //         });
+            //         // Scroll to the bottom of the chat area
+            //         $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
+
+            //         // Check if the chat has ended
+            //         if (data.length > 0 && data[data.length - 1].role === 'user' && data[data.length - 1].content.toLowerCase().includes('goodbye')) {
+            //             chatEnded = true;
+            //             $('#summaryBtn').removeClass('disabled');
+            //         } else {
+            //             chatEnded = false;
+            //             $('#summaryBtn').addClass('disabled');
+            //         }
+            //     });
+            // }, 1000);
         });
 
     </script>

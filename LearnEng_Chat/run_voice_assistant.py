@@ -16,8 +16,16 @@ import json
 
 
 status = "none"
+new_user_input = ""
+new_response = ""
+
 def initialize_chat(chat_history):
     global status
+    global new_response
+    global new_user_input
+    new_user_input = ""
+    new_response = ""
+
     status = "processing"
     """
     Main function to run the voice assistant.
@@ -35,7 +43,7 @@ def initialize_chat(chat_history):
 
     # Generate an initial response from the assistant
     initial_response_api_key = get_response_api_key()
-    initial_response_text = generate_response(Config.RESPONSE_MODEL, initial_response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
+    new_response = initial_response_text = generate_response(Config.RESPONSE_MODEL, initial_response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
     logging.info(Fore.CYAN + "Initial Response: " + initial_response_text + Fore.RESET)
 
     # Append the assistant's initial response to the chat history
@@ -67,6 +75,9 @@ def initialize_chat(chat_history):
 def continue_chat(chat_history):
     try:
         global status
+        global new_user_input
+        global new_response
+
         status = "talking"
         # Record audio from the microphone
         record_audio(Config.INPUT_AUDIO, timeout=30, phrase_time_limit=30)  
@@ -74,13 +85,14 @@ def continue_chat(chat_history):
         status = "processing"
         transcription_api_key = get_transcription_api_key()
         
-        user_input = transcribe_audio(Config.TRANSCRIPTION_MODEL, transcription_api_key, Config.INPUT_AUDIO, Config.LOCAL_MODEL_PATH)
+        new_user_input = user_input = transcribe_audio(Config.TRANSCRIPTION_MODEL, transcription_api_key, Config.INPUT_AUDIO, Config.LOCAL_MODEL_PATH)
 
         # Check if the transcription is empty or contains default phrases
         if not user_input or user_input.strip().lower() in ["thank you", "thanks", "thank you."]:
             logging.info("No valid transcription was returned. Starting recording again.")
             # continue
 
+        # new_user_input = user_input
         logging.info(Fore.GREEN + "You said: " + user_input + Fore.RESET)
 
         # Phrases to end the chat
@@ -97,8 +109,10 @@ def continue_chat(chat_history):
         response_api_key = get_response_api_key()
 
         # Generate response
-        response_text = generate_response(Config.RESPONSE_MODEL, response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
+        new_response = response_text = generate_response(Config.RESPONSE_MODEL, response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
         logging.info(Fore.CYAN + "Response: " + response_text + Fore.RESET)
+
+        # new_response = response_text
 
         # Append the assistant's response to the chat history
         chat_history.append({"role": "assistant", "content": response_text})
@@ -141,6 +155,22 @@ def get_chat_status() :
 def update_chat_status(new_status) :
     global status
     status = new_status
+
+def get_input() :
+    global new_user_input
+    return new_user_input
+
+def get_response() :
+    global new_response
+    return new_response
+
+def init_empty() : 
+    global status
+    global new_user_input
+    global new_response
+    status = ""
+    new_response = ""
+    new_user_input = ""
 
 def summarize_content(chat_history = None):
     try:

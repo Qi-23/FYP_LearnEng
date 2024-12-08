@@ -58,9 +58,7 @@ export const ChatProvider = ({ children }) => {
   }, [message]);
 
   useEffect(() => {
-    if (chatStatus == "none") {
-      setLoading(false);
-    } else if (chatStatus == "talking") {
+    if (chatStatus == "talking") {
       setLoading(false);
     } else if (chatStatus == "processing") {
       setLoading(true);

@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, jsonify
 import threading
 import logging
 from flask_cors import CORS
-from run_voice_assistant import initialize_chat, continue_chat, get_chat_status, update_chat_status, summarize_content
+from run_voice_assistant import initialize_chat, continue_chat, get_chat_status, update_chat_status, summarize_content, get_input, get_response, init_empty
 import os
 
 app = Flask(__name__)
@@ -32,14 +32,31 @@ def start_chat():
 @app.route('/next_chat', methods=['POST'])
 def next_chat():
     global chat_history
+    global new_user_input
+    global new_response
     output_file = continue_chat(chat_history, )
     audio_name, audio_type = os.path.splitext(output_file)
     return jsonify({"audio_name": audio_name, "audio_type" : audio_type})
+
+@app.route('/empty', methods=['POST'])
+def empty():
+    init_empty()
+    return "success"
 
 @app.route('/get_chat_history', methods=['GET'])
 def get_chat_history():
     global chat_history
     return jsonify(chat_history)
+
+@app.route('/get_user_input', methods=['GET'])
+def get_user_input():
+    new_user_input = get_input()
+    return jsonify({'new_user_input': new_user_input})
+
+@app.route('/get_new_response', methods=['GET'])
+def get_new_response():
+    new_response = get_response()
+    return jsonify({'new_response': new_response})
 
 @app.route('/get_status', methods=['GET'])
 def get_status():
