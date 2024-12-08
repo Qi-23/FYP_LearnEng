@@ -6,6 +6,6 @@ import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <ChatProvider>
-      {/* <CharacterLoader /> */}
+      <CharacterLoader />
     </ChatProvider>
 );

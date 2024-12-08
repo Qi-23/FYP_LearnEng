@@ -253,28 +253,28 @@
             // });
 
             // Fetch and display chat history every second
-            // setInterval(function () {
-            //     $.get('http://127.0.0.1:5000/get_chat_history', function (data) {
-            //         $('#chatArea').empty();
-            //         data.forEach(function (message) {
-            //             if (message.role !== 'system') {  // Exclude system message
-            //                 var bubbleClass = message.role === 'user' ? 'user' : 'ai';
-            //                 $('#chatArea').append('<div class="chat-bubble ' + bubbleClass + '">' + message.content + '</div>');
-            //             }
-            //         });
-            //         // Scroll to the bottom of the chat area
-            //         $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
+            setInterval(function () {
+                $.get('http://127.0.0.1:5000/get_chat_history', function (data) {
+                    $('#chatArea').empty();
+                    data.forEach(function (message) {
+                        if (message.role !== 'system') {  // Exclude system message
+                            var bubbleClass = message.role === 'user' ? 'user' : 'ai';
+                            $('#chatArea').append('<div class="chat-bubble ' + bubbleClass + '">' + message.content + '</div>');
+                        }
+                    });
+                    // Scroll to the bottom of the chat area
+                    $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
 
-            //         // Check if the chat has ended
-            //         if (data.length > 0 && data[data.length - 1].role === 'user' && data[data.length - 1].content.toLowerCase().includes('goodbye')) {
-            //             chatEnded = true;
-            //             $('#summaryBtn').removeClass('disabled');
-            //         } else {
-            //             chatEnded = false;
-            //             $('#summaryBtn').addClass('disabled');
-            //         }
-            //     });
-            // }, 1000);
+                    // Check if the chat has ended
+                    if (data.length > 0 && data[data.length - 1].role === 'user' && data[data.length - 1].content.toLowerCase().includes('goodbye')) {
+                        chatEnded = true;
+                        $('#summaryBtn').removeClass('disabled');
+                    } else {
+                        chatEnded = false;
+                        $('#summaryBtn').addClass('disabled');
+                    }
+                });
+            }, 1000);
 
         });
 
