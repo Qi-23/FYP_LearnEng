@@ -18,6 +18,11 @@ export default defineConfig({
             res.json({ response: `Received: ${message}` });
         });
 
+        api.post('/api/SummarizeContent', (req, res) => {
+            const { data } = req.body;
+            res.json({ response: `Received: ${data}` });
+        });
+
         // Use express as middleware in the Vite dev server
         app.use('/api', api);
     },
