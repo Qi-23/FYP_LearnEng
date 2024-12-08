@@ -142,22 +142,25 @@ def update_chat_status(new_status) :
     global status
     status = new_status
 
-def summarize_content(chat_history):
+def summarize_content(chat_history = None):
     try:
         global status
         status = "summarizing"
         
-        file_path = "../learneng_vite/public/audios/summaryContent.json"
-        filtered_chat_history = [item for item in chat_history if item.get("role") != "system"]
-        with open(file_path, "w") as file:
-            json.dump(filtered_chat_history, file)
-            print(f"Content saved to {file_path}")
+        file_path = "../learneng_vite/public/audios/"
+
+        chat_history_file = file_path + "chat_history.json"
+
+        if(chat_history):
+            filtered_chat_history = [item for item in chat_history if item.get("role") != "system"]
+            with open(chat_history_file, "w") as file:
+                json.dump(filtered_chat_history, file)
+                print(f"Content saved to {chat_history_file}")
     
-        chat_history_file = "../learneng_vite/public/audios/summaryContent.json"
         summarizing_history = [
             {
                 "role": "system",
-                "content": """ Trying to act as a tutor to summarize the performance of role user only in term of their illogical sentences and grammar mistake according to this conversation. You shall talk like a tutor and give a guideline on how they can improve with specifying priorities. Give a precise answer. """
+                "content": """ Summarize the performance of role user only in term of their illogical sentences and grammar mistake according to this conversation. You shall talk like a tutor and give a guideline on how they can improve with specifying priorities. Give a precise answer. """
             }
         ]
 
@@ -182,14 +185,16 @@ def summarize_content(chat_history):
             # Generate response
             response_text = generate_response(Config.RESPONSE_MODEL, response_api_key, summarizing_history, Config.LOCAL_MODEL_PATH)
             response_text = response_text.replace("role user", "learner")
+            response_text = response_text.replace("user", "learner")
+            response_text = response_text.replace("User", "learner")
         
-            output_file_name = 'output.mp3'
-            audio_output_file = '../learneng_vite/public/audios/' + output_file_name
+            # output_file_name = 'output.mp3'
+            # audio_output_file = '../learneng_vite/public/audios/' + output_file_name
 
-            tts_api_key = get_tts_api_key()
+            # tts_api_key = get_tts_api_key()
 
-            # Convert the response text to speech and save it to the appropriate file
-            text_to_speech(Config.TTS_MODEL, tts_api_key, response_text, audio_output_file, Config.LOCAL_MODEL_PATH)
+            # # Convert the response text to speech and save it to the appropriate file
+            # text_to_speech(Config.TTS_MODEL, tts_api_key, response_text, audio_output_file, Config.LOCAL_MODEL_PATH)
 
             status = "none"
 
@@ -197,12 +202,13 @@ def summarize_content(chat_history):
             logging.error(Fore.RED + f"An error occurred: {e}" + Fore.RESET)
             time.sleep(1)
 
-        response_file = "response.json"
+        summarized_content_file = file_path + "summarizedContent.json"
 
-        with open(response_file, "w") as file:
+        with open(summarized_content_file, "w") as file:
             json.dump(response_text, file)
-            print(f"Content saved to {response_file}")
+            print(f"Content saved to {summarized_content_file}")
 
-        return jsonify({"summarized_content" : response_text, "audio_file" : audio_output_file})
+        # return jsonify({"summarized_content" : response_text, "audio_file" : audio_output_file})
+        return jsonify({"summarized_content" : response_text})
     except Exception as e:
         logging.error(Fore.RED + f"An error occurred, unable to read file: {e}" + Fore.RESET)

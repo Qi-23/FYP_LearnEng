@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Language Speaking Practice</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         * {
             margin: 0;
@@ -193,6 +194,20 @@
         li {
             list-style-position: inside;
         }
+
+        .btn-summary {
+            border-color: #7F8FFF;
+        }
+
+        .btn-summary:hover {
+            background-color: #99ace9;
+            color:#f7faff;
+        }
+
+        .btn-summary:active {
+            background-color: #687dc2;
+            color:#f7faff;
+        }
     </style>
 </head>
 
@@ -223,18 +238,32 @@
             <!-- Chat Area -->
             <div class="chat-area" id="chatArea">
                 <text_area id="convert_text"></text_area>
-                <div id="summary-area" class="d-none pb-3 border-1 h-100">
-                    <div class="px-3 py-2" style="background-color: #e0e8f9;">
-                        <p class="text-center">Summarized Chat</p>
-                    </div>
-                    <div id="summarizedContent" class="p-3" style="max-height: calc(100% - 40px); overflow-y: auto;">
-                    </div>
-                </div>
             </div>
 
             <!-- Summary Button -->
             <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
-                <button class="summary-btn">Summary</button>
+                <button class="summary-btn" data-bs-toggle="modal" data-bs-target="#summarize"
+                    id="btn-showSummaryContent" disabled>Summary</button>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="summarize" tabindex="-1" role="dialog" aria-labelledby="summarizeTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center h4" style="background-color: #e0e8f9;">
+                        Summarized Chat
+                        <button type="button" class="close btn p-0" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="bi bi-x h4"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="summarizedContent" style="max-height: 60vh; overflow-y: auto;">
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" id="btn-summarize_again" class="w-25 btn btn-summary rounded-pill">Summarize Again</button>
+                        <!-- <button type="button" class="btn btn-summary rounded-pill" data-bs-dismiss="modal">Close</button> -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -242,11 +271,16 @@
     <script type="module" src="/src/main.jsx"></script>
     <script type="module" src="/src/summary.jsx"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
 
     <script>
         $(document).ready(function () {
             let chatEnded = false;
 
+            $("#btn-showSummaryContent").prop("disabled", false);
             // Start the chat
             // $.post('http://127.0.0.1:5000/start_chat', function (data) {
             //     console.log(data.status);
