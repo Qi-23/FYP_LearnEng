@@ -1,14 +1,12 @@
 import { Loader } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Leva } from "leva";
-import { Experience } from "./components/Experience";
+import { CharacterControl } from "./components/CharacterControl";
 import { useChat } from "./hooks/useChat";
 import { useEffect, useState } from "react";
-// import { UI } from "./components/UI";
 
-function App() {
+function CharacterLoader() {
 
-  const { getResponse, loading, message, getChatStatus, allowNextChat, nextChat } = useChat();
+  const { getResponse, getChatStatus, nextChat } = useChat();
   const [init, setInit] = useState();
 
   useEffect(() => {
@@ -33,13 +31,11 @@ function App() {
   return (
     <>
       <Loader />
-      <Leva hidden/>
-      {/* <UI/> */}
       <Canvas shadows camera={{ position: [0, 0, 1], fov: 6}}>
-        <Experience />
+        <CharacterControl />
       </Canvas>
     </>
   );
 }
 
-export default App;
+export default CharacterLoader;

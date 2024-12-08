@@ -38,7 +38,7 @@ const Dots = (props) => {
   );
 };
 
-export const Experience = () => {
+export const CharacterControl = () => {
   const cameraControls = useRef();
 
   useEffect(() => {
