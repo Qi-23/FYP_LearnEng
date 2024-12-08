@@ -1,10 +1,11 @@
 # test.py
 
+from colorama import Fore, init
 from flask import Flask, render_template, request, jsonify
 import threading
 import logging
 from flask_cors import CORS
-from run_voice_assistant import initialize_chat, continue_chat, get_chat_status, update_chat_status
+from run_voice_assistant import initialize_chat, continue_chat, get_chat_status, update_chat_status, summarize_content
 import os
 
 app = Flask(__name__)
@@ -49,6 +50,12 @@ def get_status():
 def update_status_to_none():
     update_chat_status("none")
     return jsonify("success")
+
+@app.route('/get_summarized_content', methods=['GET'])
+def get_summarized_content():
+    response = summarize_content().get_json()
+    logging.info(Fore.CYAN + "Response: " + response['summarized_content'] + Fore.RESET)
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)

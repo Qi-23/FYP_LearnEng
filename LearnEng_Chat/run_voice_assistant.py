@@ -2,6 +2,7 @@
 
 import logging
 import time
+from flask import jsonify 
 from colorama import Fore, init
 from voice_assistant.audio import record_audio, play_audio
 from voice_assistant.transcription import transcribe_audio
@@ -10,6 +11,8 @@ from voice_assistant.text_to_speech import text_to_speech
 from voice_assistant.utils import delete_file
 from voice_assistant.config import Config
 from voice_assistant.api_key_manager import get_transcription_api_key, get_response_api_key, get_tts_api_key
+
+import json
 
 
 status = "none"
@@ -117,6 +120,7 @@ def continue_chat(chat_history):
         #     play_audio(output_file)
         
         # Clean up audio files
+
         delete_file(Config.INPUT_AUDIO)
         # delete_file(output_file)
 
@@ -138,92 +142,67 @@ def update_chat_status(new_status) :
     global status
     status = new_status
 
-# if __name__ == "__main__":
-#     main()
-
-# import logging
-# import time
-# from colorama import Fore, init
-# from voice_assistant.audio import record_audio, play_audio
-# from voice_assistant.transcription import transcribe_audio
-# from voice_assistant.response_generation import generate_response
-# from voice_assistant.text_to_speech import text_to_speech
-# from voice_assistant.utils import delete_file
-# from voice_assistant.config import Config
-# from voice_assistant.api_key_manager import get_transcription_api_key, get_response_api_key, get_tts_api_key
-
-# from flask import Flask, render_template, request, jsonify
-# import threading
-
-# # Configure logging
-# logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-# # Initialize colorama
-# init(autoreset=True)
-
-# # Flask app initialization
-# app = Flask(__name__)
-
-# # Chat history for the AI
-# chat_history = [
-#     {"role": "system", "content": """You are a 27-year-old hotel staff member 
-#          called Joseph working at the hotel front desk. You are warm, welcoming, 
-#          patient, and highly professional, always eager to assist guests with their needs. 
-#          You take pride in delivering excellent customer service and ensures that 
-#          every guest feels comfortable and well-taken care of."""}
-# ]
-
-# @app.route("/")
-# def index():
-#     return render_template('chatting.html')
-
-# @app.route("/start_chat", methods=["GET"])
-# def start_chat():
-#     # AI's initial response
-#     response = get_response("Hello! I'm your assistant. How can I help you today?")
-#     return jsonify({"message": response})
-
-# @app.route("/get", methods=["POST"])
-# def get():
-#     user_input = request.json['user_input']
-#     logging.info(f"User input received: {user_input}")
-
-#     # Check for exit phrases
-#     exit_phrases = ["goodbye", "bye", "see you", "exit", "thank you", "end"]
-#     if any(phrase in user_input.lower() for phrase in exit_phrases):
-#         return jsonify({"message": "Goodbye! Have a great day!"})
-
-#     # Continue chatting
-#     response = get_response(user_input)
-#     return jsonify({"message": response})
-
-# def get_response(user_input):
-#     try:
-#         # Append user input to chat history
-#         chat_history.append({"role": "user", "content": user_input})
+def summarize_content(chat_history):
+    try:
+        global status
+        status = "summarizing"
         
-#         # Generate a response using the AI
-#         response_api_key = get_response_api_key()
-#         response_text = generate_response(Config.RESPONSE_MODEL, response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
-#         chat_history.append({"role": "assistant", "content": response_text})
+        file_path = "../learneng_vite/public/audios/summaryContent.json"
+        filtered_chat_history = [item for item in chat_history if item.get("role") != "system"]
+        with open(file_path, "w") as file:
+            json.dump(filtered_chat_history, file)
+            print(f"Content saved to {file_path}")
+    
+        chat_history_file = "../learneng_vite/public/audios/summaryContent.json"
+        summarizing_history = [
+            {
+                "role": "system",
+                "content": """ Trying to act as a tutor to summarize the performance of role user only in term of their illogical sentences and grammar mistake according to this conversation. You shall talk like a tutor and give a guideline on how they can improve with specifying priorities. Give a precise answer. """
+            }
+        ]
+
+        with open(chat_history_file, "r") as file:
+            chat_history_data = json.load(file)
+
+        # Combine the assistant and user conversations into one content
+        combined_content = ""
+        for entry in chat_history_data:
+            if entry["role"] in ["assistant", "user"]:
+                combined_content += f"{entry['role'].capitalize()}: {entry['content']}\n"
+
+        # Add the combined content to the system's content in summarizing_history
+        summarizing_history.append({
+            "role": "system",
+            "content": combined_content
+        })
+
+        try:
+            response_api_key = get_response_api_key()
+
+            # Generate response
+            response_text = generate_response(Config.RESPONSE_MODEL, response_api_key, summarizing_history, Config.LOCAL_MODEL_PATH)
+            response_text = response_text.replace("role user", "learner")
         
-#         # Start TTS for response
-#         start_tts(response_text)
-#         return response_text
-#     except Exception as e:
-#         logging.error(f"Error in generating response: {e}")
-#         return "I'm sorry, there was an error in processing your request."
+            output_file_name = 'output.mp3'
+            audio_output_file = '../learneng_vite/public/audios/' + output_file_name
 
-# def start_tts(response_text):
-#     try:
-#         # Convert text to speech and play audio
-#         tts_api_key = get_tts_api_key()
-#         text_to_speech(Config.TTS_MODEL, tts_api_key, response_text, 'output.mp3', Config.LOCAL_MODEL_PATH)
-#         play_audio('output.mp3')
-#     except Exception as e:
-#         logging.error(f"Error in TTS: {e}")
+            tts_api_key = get_tts_api_key()
 
-# if __name__ == "__main__":
-#     app.run(debug=True)
+            # Convert the response text to speech and save it to the appropriate file
+            text_to_speech(Config.TTS_MODEL, tts_api_key, response_text, audio_output_file, Config.LOCAL_MODEL_PATH)
 
+            status = "none"
 
+        except Exception as e:
+            logging.error(Fore.RED + f"An error occurred: {e}" + Fore.RESET)
+            time.sleep(1)
+
+        response_file = "response.json"
+
+        with open(response_file, "w") as file:
+            json.dump(response_text, file)
+            print(f"Content saved to {response_file}")
+
+        return jsonify({"summarized_content" : response_text, "audio_file" : audio_output_file})
+    except Exception as e:
+        logging.error(Fore.RED + f"An error occurred, unable to read file: {e}" + Fore.RESET)
