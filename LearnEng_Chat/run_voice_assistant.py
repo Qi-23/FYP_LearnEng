@@ -38,7 +38,8 @@ def initialize_chat(chat_history):
          You take pride in delivering excellent customer service and ensures that 
          every guest feels comfortable and well-taken care of. 
          You will help the users with their booking room requests.
-         Your answers are short and concise. """
+         Your answers are short and concise.
+         Your answers are very very very short and concise. """
     })
 
     # Generate an initial response from the assistant
@@ -242,3 +243,4 @@ def summarize_content(chat_history = None):
         return jsonify({"summarized_content" : response_text})
     except Exception as e:
         logging.error(Fore.RED + f"An error occurred, unable to read file: {e}" + Fore.RESET)
+

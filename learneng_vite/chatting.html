@@ -1,5 +1,3 @@
-<!-- /templates/chatting.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -155,10 +153,8 @@
         }
 
         /* Summary Button */
-        .summary-btn {
+        .end-btn, .review-btn {
             display: inline-block;
-            background-color: #799DEC;
-            color: #fff;
             padding: 12px 25px;
             font-size: 1rem;
             font-weight: bold;
@@ -167,10 +163,27 @@
             text-decoration: none;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 0 10px;
         }
 
-        .summary-btn:hover {
-            background-color: #ffffff;
+        .end-btn {
+            background-color: #FF6347; 
+            color: #fff;
+        }
+
+        .end-btn:hover {
+            background-color: #FF4500; 
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .review-btn {
+            background-color: #32CD32; 
+            color: #fff;
+        }
+
+        .review-btn:hover {
+            background-color: #228B22;
             transform: translateY(-3px);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
         }
@@ -240,7 +253,7 @@
                 <text_area id="convert_text"></text_area>
             </div>
 
-            <!-- Summary Button -->
+            <!-- Buttons -->
             <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
                 <button class="summary-btn" data-bs-toggle="modal" data-bs-target="#summarize"
                     id="btn-showSummaryContent" disabled>Summary</button>
@@ -265,6 +278,8 @@
                         <!-- <button type="button" class="btn btn-summary rounded-pill" data-bs-dismiss="modal">Close</button> -->
                     </div>
                 </div>
+                <button class="end-btn">End</button>
+                <button class="review-btn">Review</button>
             </div>
         </div>
     </div>
@@ -309,10 +324,10 @@
                         // // Check if the chat has ended
                         // if (data.length > 0 && data[data.length - 1].role === 'user' && data[data.length - 1].content.toLowerCase().includes('goodbye')) {
                         //     chatEnded = true;
-                        //     $('#summaryBtn').removeClass('disabled');
+                        //     $('#endBtn').removeClass('disabled');
                         // } else {
                         //     chatEnded = false;
-                        //     $('#summaryBtn').addClass('disabled');
+                        //     $('#endBtn').addClass('disabled');
                         // }
                     });
                 }, 1000);
