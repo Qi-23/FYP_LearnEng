@@ -135,6 +135,7 @@ cython_debug/
 #audio files
 *.mp3
 *.wav
+*.json
 
 # log
 node_modules/
@@ -142,6 +143,7 @@ node_modules/
 # Exception for voice_samples
 !voice_samples/*.mp3
 !voice_samples/*.wav
+!voice_samples/*.json
 LICENSE
 README.md
 setup.py
