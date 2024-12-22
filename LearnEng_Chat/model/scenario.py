@@ -55,39 +55,33 @@ class Scenario:
             levelObj = level
         return levelObj
     
+    def create_object(self, each):
+        id = each['ScenarioID']
+        name = each['ScenarioName']
+        image = each['ScenarioImage']
+        scenarioDesc = each['ScenarioDescription']
+        characterDesc = each['CharacterDescription']
+        vocab = each['Vocab']
+        grammar = each['Grammar']
+        situationalChat = each['SituationalChat']
+        level = each['LevelID']
+
+        scenarioObj = Scenario(name, image, scenarioDesc, characterDesc, vocab, grammar, situationalChat, level, id)
+        return scenarioObj
+    
     def create_scenarioObj(self, result=None):
         if result is None or result is []:
             return None
 
         if (isinstance(result, dict)):
-            id = result['ScenarioID']
-            name = result['ScenarioName']
-            image = result['ScenarioImage']
-            scenarioDesc = result['ScenarioDescription']
-            characterDesc = result['CharacterDescription']
-            vocab = result['Vocab']
-            grammar = result['Grammar']
-            situationalChat = result['SituationalChat']
-            level = result['LevelID']
-
-            scenarioObj = Scenario(name, image, scenarioDesc, characterDesc, vocab, grammar, situationalChat, level, id)
+            scenarioObj = self.create_object(self, result)
             return scenarioObj
         
         elif (isinstance(result, list)):
             scenarioObjList = []
             for each in result:
                 if (isinstance(each, dict)):
-                    id = each['ScenarioID']
-                    name = each['ScenarioName']
-                    image = each['ScenarioImage']
-                    scenarioDesc = each['ScenarioDescription']
-                    characterDesc = each['CharacterDescription']
-                    vocab = each['Vocab']
-                    grammar = result['Grammar']
-                    situationalChat = result['SituationalChat']
-                    level =  each['LevelID']
-
-                    scenarioObj = Scenario(name, image, scenarioDesc, characterDesc, vocab, grammar, situationalChat, level, id)
+                    scenarioObj = self.create_object(self, each)
                     scenarioObjList.append(scenarioObj)
             return scenarioObjList
         
