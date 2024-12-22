@@ -19,6 +19,123 @@ status = "none"
 new_user_input = ""
 new_response = ""
 
+# def initialize_chat(chat_history):
+#     global status
+#     global new_response
+#     global new_user_input
+#     new_user_input = ""
+#     new_response = ""
+
+#     status = "processing"
+
+#     keywords = ["booking", "room", "check-in", "check-out", "reservation", "guest", "confirmation", "details", "availability", "facility"]
+
+#     chat_history.append({
+#         "role": "system",
+#         "content": f""" You are a 27-year-old hotel staff member 
+#          called Joseph working at the hotel front desk in physical hotel. You are warm, welcoming, 
+#          patient, and highly professional, always eager to assist guests with their needs. 
+#          You take pride in delivering excellent customer service and ensure that 
+#          every guest feels comfortable and well-taken care of. 
+#          You will help the users with their booking room requests.
+#          Your answers are very very very short and concise.
+#          Try to use these keywords when responding: {', '.join(keywords)}."""
+#     })
+
+#     # Generate an initial response from the assistant
+#     initial_response_api_key = get_response_api_key()
+#     new_response = initial_response_text = generate_response(Config.RESPONSE_MODEL, initial_response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
+#     logging.info(Fore.CYAN + "Initial Response: " + initial_response_text + Fore.RESET)
+
+#     # Append the assistant's initial response to the chat history
+#     chat_history.append({"role": "assistant", "content": initial_response_text})
+
+#     # Determine the output file format based on the TTS model
+#     initial_output_file_name = 'initial_output.mp3'
+#     initial_output_file = '../learneng_vite/public/audios/' + initial_output_file_name
+
+#     # Get the API key for TTS
+#     initial_tts_api_key = get_tts_api_key()
+
+#     # Convert the initial response text to speech and save it to the appropriate file
+#     text_to_speech(Config.TTS_MODEL, initial_tts_api_key, initial_response_text, initial_output_file, Config.LOCAL_MODEL_PATH)
+
+#     return initial_output_file_name
+
+# def continue_chat(chat_history):
+#     try:
+#         global status
+#         global new_user_input
+#         global new_response
+
+#         status = "talking"
+
+#         # Record audio from the microphone
+#         record_audio(Config.INPUT_AUDIO, timeout=30, phrase_time_limit=30)  
+
+#         status = "processing"
+#         transcription_api_key = get_transcription_api_key()
+        
+#         new_user_input = user_input = transcribe_audio(Config.TRANSCRIPTION_MODEL, transcription_api_key, Config.INPUT_AUDIO, Config.LOCAL_MODEL_PATH)
+
+#         # Check if the transcription is empty or contains default phrases
+#         if not user_input or user_input.strip().lower() in ["thank you", "thanks", "thank you."]:
+#             logging.info("No valid transcription was returned. Starting recording again.")
+#             return
+
+#         logging.info(Fore.GREEN + "You said: " + user_input + Fore.RESET)
+
+#         # Phrases to end the chat
+#         exit_phrases = ["goodbye", "bye", "see you", "exit", "end"]
+#         if any(phrase in user_input.lower() for phrase in exit_phrases):
+#             chat_history.append({"role": "user", "content": user_input})
+#             return
+
+#         # Append the user's input to the chat history
+#         chat_history.append({"role": "user", "content": user_input})
+
+#         # Keywords for the AI to prioritize in its responses
+#         keywords = ["booking", "room", "check-in", "check-out", "reservation", "guest", "confirmation", "details", "availability", "amenities"]
+
+#         response_api_key = get_response_api_key()
+
+#         # Generate response
+#         response_text = generate_response(Config.RESPONSE_MODEL, response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
+
+#         # Attempt to integrate keywords dynamically into the response
+#         # for keyword in keywords:
+#         #     if keyword not in response_text.lower():
+#         #         response_text += f" {keyword}."
+
+#         logging.info(Fore.CYAN + "Response: " + response_text + Fore.RESET)
+
+#         new_response = response_text
+
+#         # Append the assistant's response to the chat history
+#         chat_history.append({"role": "assistant", "content": response_text})
+
+#         # Determine the output file format based on TTS model
+#         output_file_name = 'output.mp3'
+#         output_file = '../learneng_vite/public/audios/' + output_file_name
+#         tts_api_key = get_tts_api_key()
+
+#         # Convert the response text to speech and save it to the appropriate file
+#         text_to_speech(Config.TTS_MODEL, tts_api_key, response_text, output_file, Config.LOCAL_MODEL_PATH)
+
+#         # Clean up audio files
+#         delete_file(Config.INPUT_AUDIO)
+
+#         status = "none"
+#         return output_file_name
+
+#     except Exception as e:
+#         logging.error(Fore.RED + f"An error occurred: {e}" + Fore.RESET)
+#         delete_file(Config.INPUT_AUDIO)
+#         if 'output_file' in locals():
+#             delete_file(output_file)
+#         time.sleep(1)
+
+
 def initialize_chat(chat_history):
     global status
     global new_response

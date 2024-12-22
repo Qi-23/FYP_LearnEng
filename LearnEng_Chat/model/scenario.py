@@ -90,7 +90,7 @@ class Scenario:
         DBConnection.execute_query(insertQ)
 
     @classmethod
-    def fetch_all(self):
+    def fetch_all(self): #return all scenario objects(info)
         queryAll = f"SELECT * FROM {self._tableName}"
         result = DBConnection.fetch_all(queryAll)
         scenarioObjList = self.create_scenarioObj(self, result)
