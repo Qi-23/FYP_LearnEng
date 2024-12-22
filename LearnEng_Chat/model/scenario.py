@@ -11,15 +11,19 @@ class Scenario:
     _scenarioDesc = None
     _characterDesc = None
     _vocab = None
+    _grammar = None
+    _situationalChat = None
     _level = None
 
-    def __init__(self, name, image, scenarioDesc, characterDesc, vocab, level, id=None):
+    def __init__(self, name, image, scenarioDesc, characterDesc, vocab, grammar, situationalChat, level, id=None):
         self._id = id
         self._name = name
         self._image = image              # image path
         self._scenarioDesc = scenarioDesc
         self._characterDesc = characterDesc
         self._vocab = vocab
+        self._grammar = grammar
+        self._situationalChat = situationalChat
         self._level = level if isinstance(level, Level) else self.getLevel(level)
 
     def setName(self, name):
@@ -62,9 +66,11 @@ class Scenario:
             scenarioDesc = result['ScenarioDescription']
             characterDesc = result['CharacterDescription']
             vocab = result['Vocab']
+            grammar = result['Grammar']
+            situationalChat = result['SituationalChat']
             level = result['LevelID']
 
-            scenarioObj = Scenario(name, image, scenarioDesc, characterDesc, vocab, level, id)
+            scenarioObj = Scenario(name, image, scenarioDesc, characterDesc, vocab, grammar, situationalChat, level, id)
             return scenarioObj
         
         elif (isinstance(result, list)):
@@ -77,20 +83,22 @@ class Scenario:
                     scenarioDesc = each['ScenarioDescription']
                     characterDesc = each['CharacterDescription']
                     vocab = each['Vocab']
+                    grammar = result['Grammar']
+                    situationalChat = result['SituationalChat']
                     level =  each['LevelID']
 
-                    scenarioObj = Scenario(name, image, scenarioDesc, characterDesc, vocab, level, id)
+                    scenarioObj = Scenario(name, image, scenarioDesc, characterDesc, vocab, grammar, situationalChat, level, id)
                     scenarioObjList.append(scenarioObj)
             return scenarioObjList
         
         return False
     
     def create_scenario(self):
-        insertQ = f"INSERT INTO {self._tableName} VALUES (NULL, '{self._name}', '{self._image}', '{self._scenarioDesc}', '{self._characterDesc}', '{self._vocab}', '{self._level.id}')"
+        insertQ = f"INSERT INTO {self._tableName} VALUES (NULL, '{self._name}', '{self._image}', '{self._scenarioDesc}', '{self._characterDesc}', '{self._vocab}', '{self._grammar}', '{self._situationalChat}', '{self._level.id}')"
         DBConnection.execute_query(insertQ)
 
     def update_scenario(self):
-        updateQ = f"UPDATE {self._tableName} SET ScenarioName = '{self._name}', ScenarioImage = '{self._image}', ScenarioDescription = '{self._scenarioDesc}', CharacterDescription = '{self._characterDesc}', Vocab = '{self._vocab}' WHERE ScenarioID = {self._id};"
+        updateQ = f"UPDATE {self._tableName} SET ScenarioName = '{self._name}', ScenarioImage = '{self._image}', ScenarioDescription = '{self._scenarioDesc}', CharacterDescription = '{self._characterDesc}', Vocab = '{self._vocab}', Grammar = '{self._grammar}', SituationalChat = '{self._situationalChat}' WHERE ScenarioID = {self._id};"
         print(updateQ)
         DBConnection.execute_query(updateQ)
 

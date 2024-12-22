@@ -49,6 +49,8 @@ CREATE TABLE Scenario (
   ScenarioDescription 	TEXT NOT NULL,
   CharacterDescription 	TEXT NOT NULL,
   Vocab         TEXT NOT NULL,
+  Grammar         TEXT NOT NULL,
+  SituationalChat         TEXT NOT NULL,
   LevelID 	INT,
   PRIMARY KEY (ScenarioID),
   FOREIGN KEY (LevelID) REFERENCES Level(LevelID)
