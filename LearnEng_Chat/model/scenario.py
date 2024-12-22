@@ -89,6 +89,11 @@ class Scenario:
         insertQ = f"INSERT INTO {self._tableName} VALUES (NULL, '{self._name}', '{self._image}', '{self._scenarioDesc}', '{self._characterDesc}', '{self._vocab}', '{self._level.id}')"
         DBConnection.execute_query(insertQ)
 
+    def update_scenario(self):
+        updateQ = f"UPDATE {self._tableName} SET ScenarioName = '{self._name}', ScenarioImage = '{self._image}', ScenarioDescription = '{self._scenarioDesc}', CharacterDescription = '{self._characterDesc}', Vocab = '{self._vocab}' WHERE ScenarioID = {self._id};"
+        print(updateQ)
+        DBConnection.execute_query(updateQ)
+
     @classmethod
     def fetch_all(self): #return all scenario objects(info)
         queryAll = f"SELECT * FROM {self._tableName}"

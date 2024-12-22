@@ -8,47 +8,16 @@ import { button, useControls } from "leva";
 import React, { useEffect, useRef, useState } from "react";
 
 import * as THREE from "three";
-import { useChat } from "../hooks/useChat";
 
-const corresponding = {
-  A: "viseme_PP",
-  B: "viseme_kk",
-  C: "viseme_I",
-  D: "viseme_AA",
-  E: "viseme_O",
-  F: "viseme_U",
-  G: "viseme_FF",
-  H: "viseme_TH",
-  X: "viseme_PP",
-};
 
-let setupMode = false;
-
-export function Character(props) {
-  const { nodes, materials, scene } = useGLTF(
-    "/models/MaleCharacter1.glb"
-  );
+export function Character(character, ...props) {
+  if (typeof character.character !== 'string') {
+    console.warn("Invalid character prop, expected a string but got:", typeof character);
+    console.log(character.character)
+    return null;  // Or display a default fallback
+  }
+  const { nodes, materials, scene } = useGLTF(`/models/${character.character}.glb`);
   
-  const { message, onMessagePlayed, allowNextChat } = useChat();
-  const [lipsync, setLipsync] = useState();
-  
-  useEffect(() => {
-    console.log("message: " + message);
-    if (!message) {
-      setAnimation("Idle");
-      return;
-    }
-    setLipsync(message.lipsync);
-    const audio = new Audio("data:audio/mp3;base64," + message.audio);
-    audio.play();
-    setAudio(audio);
-    audio.onended = () => {
-      onMessagePlayed();
-      allowNextChat();
-    };
-  }, [message]);
-  
-
   const { animations: idleAnimation } = useFBX("/animations/idle.fbx");
   const { animations: nodeAnimation } = useFBX("/animations/nodeHead.fbx");
 
@@ -61,12 +30,16 @@ export function Character(props) {
   const { actions, mixer } = useAnimations([idleAnimation[0], nodeAnimation[0]], group);
 
   useEffect(() => {
-    actions[animation]
-      .reset()
-      .fadeIn(mixer.stats.actions.inUse === 0 ? 0 : 0.5)
-      .play();
-    return () => actions[animation].fadeOut(0.5);
-  }, [animation]);
+    // Ensure actions are loaded before attempting to play the animation
+    if (actions && actions[animation]) {
+      actions[animation]
+        .reset()
+        .fadeIn(0.5)
+        .play();
+      
+      return () => actions[animation]?.fadeOut(0.5); // Safely call fadeOut if actions exist
+    }
+  }, [animation, actions]);
 
   const lerpMorphTarget = (target, value, speed = 0.1) => {
     scene.traverse((child) => {
@@ -83,14 +56,6 @@ export function Character(props) {
           value,
           speed
         );
-
-        if (!setupMode) {
-          try {
-            set({
-              [target]: value,
-            });
-          } catch (e) {}
-        }
       }
     });
   };
@@ -98,40 +63,11 @@ export function Character(props) {
   const [blink, setBlink] = useState(false);
   const [winkLeft, setWinkLeft] = useState(false);
   const [winkRight, setWinkRight] = useState(false);
-  const [audio, setAudio] = useState();
 
   useFrame(() => {
 
     lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5);
     lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
-
-    // LIPSYNC
-    if (setupMode) {
-      return;
-    }
-
-    const appliedMorphTargets = [];
-    if (message && lipsync) {
-      const currentAudioTime = audio.currentTime;
-      for (let i = 0; i < lipsync.mouthCues.length; i++) {
-        const mouthCue = lipsync.mouthCues[i];
-        if (
-          currentAudioTime >= mouthCue.start &&
-          currentAudioTime <= mouthCue.end
-        ) {
-          appliedMorphTargets.push(corresponding[mouthCue.value]);
-          lerpMorphTarget(corresponding[mouthCue.value], 0.5, 0.3);
-          break;
-        }
-      }
-    }
-
-    Object.values(corresponding).forEach((value) => {
-      if (appliedMorphTargets.includes(value)) {
-        return;
-      }
-      lerpMorphTarget(value, 0, 0.1);
-    });
   });
 
   useEffect(() => {
@@ -213,5 +149,3 @@ export function Character(props) {
     </group>
   )
 }
-
-useGLTF.preload('/models/MaleCharacter1.glb');

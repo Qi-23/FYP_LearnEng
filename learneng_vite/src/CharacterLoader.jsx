@@ -31,7 +31,7 @@ function CharacterLoader() {
   return (
     <>
       <Loader />
-      <Canvas shadows camera={{ position: [0, 0, 1], fov: 6}}>
+      <Canvas shadows camera={{ position: [0, 0, 1], fov: 6, aspect: window.innerWidth / window.innerHeight }}>
         <CharacterControl />
       </Canvas>
     </>

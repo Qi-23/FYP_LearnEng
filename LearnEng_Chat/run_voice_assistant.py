@@ -299,6 +299,9 @@ def summarize_content(chat_history = None):
 
         chat_history_file = file_path + "chat_history.json"
 
+        with open(chat_history_file, "r") as file:
+            chat_history = json.load(file)
+
         if(chat_history):
             filtered_chat_history = [item for item in chat_history if item.get("role") != "system"]
             with open(chat_history_file, "w") as file:
@@ -308,16 +311,54 @@ def summarize_content(chat_history = None):
         summarizing_history = [
             {
                 "role": "system",
-                "content": """ Summarize the performance of role user only in term of their illogical sentences and grammar mistake according to this conversation. You shall talk like a tutor and give a guideline on how they can improve with specifying priorities. Give a precise answer. """
+                "content": """ Summarize the performance of role user only in term of their grammar mistake according to this conversation. Strictly follow the format as shown below.
+                 Use the format as below :
+                 Grammar mistakes:
+                 1. **Type of mistake**
+                 * "Sentence of user role with mistake."
+                    Correction: "Corrected version of the sentence"
+                    Note: "Grammar fixing note."
+
+                 2. **Type of mistake**
+                 * "Sentence of user role with mistake."
+                    Correction: "Corrected version of the sentence"
+                    Note: "Grammar fixing note."
+                    
+                 ...
+                  
+                 Example of response: 
+                  **Grammar Mistakes:**
+
+                 1. **Subject-Verb Agreement**
+                 * "Hi, I like to books a room for two night."
+                 * Correction: "Hi, I would like to book a room for two nights."
+                 * Note: "The subject 'I' requires the correct modal verb 'would like,' and 'books' should be the base form 'book.' Additionally, 'nights' should be plural for grammatical agreement."
+
+                 2. **Verb-Subject Agreement**
+                 * "Is just me and my friend."
+                 * Correction: "It is just me and my friend."
+                 * Note: "The sentence lacks the subject 'It,' which is required to form a complete and grammatically correct sentence."
+
+                 3. **Word Choice**
+                 * "Non smoke and mountain view if you have it."
+                 * Correction: "Non-smoking and a mountain view, if available."
+                 * Note: "The phrase 'Non smoke' should be 'Non-smoking,' and 'if you have it' is more appropriately rephrased as 'if available' for clarity and conciseness."
+
+                 4. **Missing Article**
+                 * "I'm Sarah Lee, and my phone 987654."
+                 * Correction: "I'm Sarah Lee, and my phone number is 987654."
+                 * Note: "The article 'number' is missing after 'phone,' and the verb 'is' is needed to complete the sentence."
+
+                 5. **Incorrect Preposition**
+                 * "That's great, thank for help me!"
+                 * Correction: "That's great, thank you for helping me!"
+                 * Note: "The preposition 'for' is required after 'thank,' and the correct phrase is 'helping me' instead of 'help me' to match the intended context." """
             }
         ]
 
-        with open(chat_history_file, "r") as file:
-            chat_history_data = json.load(file)
-
         # Combine the assistant and user conversations into one content
         combined_content = ""
-        for entry in chat_history_data:
+        for entry in chat_history:
             if entry["role"] in ["assistant", "user"]:
                 combined_content += f"{entry['role'].capitalize()}: {entry['content']}\n"
 
@@ -327,6 +368,10 @@ def summarize_content(chat_history = None):
             "content": combined_content
         })
 
+        summarizing_content_file = file_path + "save.json"
+        with open(summarizing_content_file, "w") as file:
+            json.dump(summarizing_history, file)
+
         try:
             response_api_key = get_response_api_key()
 
@@ -334,7 +379,7 @@ def summarize_content(chat_history = None):
             response_text = generate_response(Config.RESPONSE_MODEL, response_api_key, summarizing_history, Config.LOCAL_MODEL_PATH)
             response_text = response_text.replace("role user", "learner")
             response_text = response_text.replace("user", "learner")
-            response_text = response_text.replace("User", "learner")
+            response_text = response_text.replace("User", "Learner")
         
             # output_file_name = 'output.mp3'
             # audio_output_file = '../learneng_vite/public/audios/' + output_file_name

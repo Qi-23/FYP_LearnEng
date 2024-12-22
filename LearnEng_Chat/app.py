@@ -49,15 +49,15 @@ DBConnection.connect()
 # testing start here -------------------------------------------------------------------------------
 
 # try run (change the class name to test)
-result_one = Voice.fetch_by_id(1)
-result_all = Voice.fetch_all()
-i = 0
-print()
-for each in result_all:
-    print(each)
-    print()
+# result_one = Voice.fetch_by_id(1)
+# result_all = Voice.fetch_all()
+# i = 0
+# print()
+# for each in result_all:
+#     print(each)
+#     print()
 
-print(f"\n{result_one}\n")
+# print(f"\n{result_one}\n")
 
 
 

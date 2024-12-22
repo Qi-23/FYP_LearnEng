@@ -71,10 +71,10 @@ def update_status_to_none():
 @app.route('/get_summarized_content', methods=['GET'])
 def get_summarized_content():
     global chat_history
-    if (chat_history):
-        response = summarize_content(chat_history).get_json()
-    else:
+    if (not chat_history or chat_history == ""):
         response = summarize_content().get_json()
+    else:
+        response = summarize_content(chat_history).get_json()
     logging.info(Fore.CYAN + "Response: " + response['summarized_content'] + Fore.RESET)
     return response
 

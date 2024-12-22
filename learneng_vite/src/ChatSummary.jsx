@@ -19,7 +19,7 @@ function ChatSummary() {
         const data = (await response.json()).summarized_content;
         formattedResponse = data.replace(/\n/g, '</br>');
         formattedResponse = formattedResponse.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        formattedResponse = formattedResponse.replace(/\*([\s\S]+?)<\/br>/g, '<ul class="list-dot"><li>$1</li></ul>');
+        formattedResponse = formattedResponse.replace(/\*([\s\S]+?)(?:<\/br>|$)/g, '<ul class="list-dot"><li>$1</li></ul>');
         formattedResponse = formattedResponse.replace(/\+([\s\S]+?)<\/br>/g, '<ul class="list-circle" style="padding-left: 20px;"><li>$1</li></ul>');
         setLoading(false);
         $("#summarizedContent").html(formattedResponse);
