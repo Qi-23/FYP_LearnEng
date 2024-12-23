@@ -27,6 +27,11 @@ export default defineConfig({
             const { data } = req.body;
             res.json({ response: `Received: ${data}` });
         });
+        
+        api.post('/api/UploadImage', (req, res) => {
+            const { data } = req.body;
+            res.json({ response: `Received: ${data}` });
+        });
 
         // Use express as middleware in the Vite dev server
         app.use('/api', api);

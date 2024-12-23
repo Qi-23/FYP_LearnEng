@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import ConfigureCharacterLoader from "./ConfigureCharacterLoader";
+import EditorScenarioPage from "./EditorScenarioPage";
 
 ReactDOM.createRoot(document.getElementById("loadCharacter")).render(
-      <ConfigureCharacterLoader />
+      <EditorScenarioPage />
 );

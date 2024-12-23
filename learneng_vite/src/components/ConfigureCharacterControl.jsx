@@ -7,7 +7,7 @@ import { Character } from "./DisplayCharacter";
 
 export const characters = ["MaleCharacter1", "MaleCharacter2"];
 
-export const ConfigureCharacterControl = () => {
+export const ConfigureCharacterControl = ({selectedCharacter}) => {
   const cameraControls = useRef();
 
   useEffect(() => {
@@ -31,11 +31,19 @@ export const ConfigureCharacterControl = () => {
   }, []);
 
 
-  const [character, setCharacter] = useState("MaleCharacter1");
+  const [character, setCharacter] = useState(null);
 
   useEffect(() => {
     console.log("Selected Character:", character);
+    let characterFileName = $("#character-select")
+    if (character != characterFileName.val()) {
+      characterFileName.val(character).change();
+    }
   }, [character]);
+
+  useEffect(() => {
+    setCharacter(selectedCharacter)
+  }, [selectedCharacter]);
 
   const selectElement = document.getElementById("character-select");
   useEffect(() => {

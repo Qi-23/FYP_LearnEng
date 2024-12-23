@@ -51,6 +51,8 @@ CREATE TABLE Scenario (
   Vocab         TEXT NOT NULL,
   Grammar         TEXT NOT NULL,
   SituationalChat         TEXT NOT NULL,
+  CharacterFileName   VARCHAR(255) NOT NULL,
+  BackgroundImage VARCHAR(255),
   LevelID 	INT,
   PRIMARY KEY (ScenarioID),
   FOREIGN KEY (LevelID) REFERENCES Level(LevelID)

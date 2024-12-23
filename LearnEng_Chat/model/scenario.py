@@ -13,9 +13,11 @@ class Scenario:
     _vocab = None
     _grammar = None
     _situationalChat = None
+    _characterFileName = None
+    _backgroundImage = None
     _level = None
 
-    def __init__(self, name, image, scenarioDesc, characterDesc, vocab, grammar, situationalChat, level, id=None):
+    def __init__(self, name, image, scenarioDesc, characterDesc, vocab, characterFileName, backgroundImage, grammar, situationalChat, level, id=None):
         self._id = id
         self._name = name
         self._image = image              # image path
@@ -24,6 +26,8 @@ class Scenario:
         self._vocab = vocab
         self._grammar = grammar
         self._situationalChat = situationalChat
+        self._characterFileName = characterFileName
+        self._backgroundImage = backgroundImage
         self._level = level if isinstance(level, Level) else self.getLevel(level)
 
     def setName(self, name):
@@ -55,6 +59,21 @@ class Scenario:
             levelObj = level
         return levelObj
     
+    def to_dict(self):
+        return {
+            "id": self._id,
+            "name": self._name,
+            "image": self._image,
+            "scenarioDesc": self._scenarioDesc,
+            "characterDesc": self._characterDesc,
+            "vocab": self._vocab,
+            "grammar": self._grammar,
+            "situationalChat": self._situationalChat,
+            "characterFileName": self._characterFileName,
+            "backgroundImage": self._backgroundImage,
+            "level": self._level._id
+        }
+    
     def create_object(self, each):
         id = each['ScenarioID']
         name = each['ScenarioName']
@@ -64,9 +83,11 @@ class Scenario:
         vocab = each['Vocab']
         grammar = each['Grammar']
         situationalChat = each['SituationalChat']
+        characterFileName = each['CharacterFileName']
+        backgroundImage = each['BackgroundImage']
         level = each['LevelID']
 
-        scenarioObj = Scenario(name, image, scenarioDesc, characterDesc, vocab, grammar, situationalChat, level, id)
+        scenarioObj = Scenario(name, image, scenarioDesc, characterDesc, vocab, characterFileName, backgroundImage, grammar, situationalChat, level, id)
         return scenarioObj
     
     def create_scenarioObj(self, result=None):
@@ -88,14 +109,15 @@ class Scenario:
         return False
     
     def create_scenario(self):
-        insertQ = f"INSERT INTO {self._tableName} VALUES (NULL, '{self._name}', '{self._image}', '{self._scenarioDesc}', '{self._characterDesc}', '{self._vocab}', '{self._grammar}', '{self._situationalChat}', '{self._level.id}')"
+        insertQ = f"INSERT INTO {self._tableName} VALUES (NULL, '{self._name}', '{self._image}', '{self._scenarioDesc}', '{self._characterDesc}', '{self._vocab}', '{self._grammar}', '{self._situationalChat}', '{self._characterFileName}', '{self._backgroundImage}', '{self._level._id}')"
+        print(insertQ)
         DBConnection.execute_query(insertQ)
 
     def update_scenario(self):
-        updateQ = f"UPDATE {self._tableName} SET ScenarioName = '{self._name}', ScenarioImage = '{self._image}', ScenarioDescription = '{self._scenarioDesc}', CharacterDescription = '{self._characterDesc}', Vocab = '{self._vocab}', Grammar = '{self._grammar}', SituationalChat = '{self._situationalChat}' WHERE ScenarioID = {self._id};"
+        updateQ = f"UPDATE {self._tableName} SET ScenarioName = '{self._name}', ScenarioImage = '{self._image}', ScenarioDescription = '{self._scenarioDesc}', CharacterDescription = '{self._characterDesc}', Vocab = '{self._vocab}', Grammar = '{self._grammar}', SituationalChat = '{self._situationalChat}', CharacterFileName = '{self._characterFileName}', BackgroundImage = '{self._backgroundImage}' WHERE ScenarioID = {self._id};"
         print(updateQ)
         DBConnection.execute_query(updateQ)
-
+    
     @classmethod
     def fetch_all(self): #return all scenario objects(info)
         queryAll = f"SELECT * FROM {self._tableName}"

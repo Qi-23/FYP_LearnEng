@@ -11,6 +11,10 @@ import * as THREE from "three";
 
 
 export function Character(character, ...props) {
+  if (character.character == null) {
+    console.warn("No character")
+    return null;
+  }
   if (typeof character.character !== 'string') {
     console.warn("Invalid character prop, expected a string but got:", typeof character);
     console.log(character.character)

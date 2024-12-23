@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 // import { characters } from "./components/DisplayCharacter";
 export const characters = ["MaleCharacter1", "MaleCharacter2"];
 
-function ConfigureCharacterLoader() {
+function ConfigureCharacterLoader({selectedCharacter}) {
 
   return (
     <>
       <Loader />
       <Canvas shadows camera={{ position: [0, 0, 1], fov: 6 }}>
-        <ConfigureCharacterControl />
+        <ConfigureCharacterControl selectedCharacter={selectedCharacter}/>
       </Canvas>
     </>
   );

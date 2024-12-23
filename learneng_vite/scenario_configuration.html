@@ -14,50 +14,20 @@
 
 <body>
     <nav class="editor-header navbar navbar-expand-lg navbar-light px-5 py-2">
-        <a class="navbar-brand" href="#">Logo or something</a>
+        <!-- <a class="navbar-brand" href="#">Logo or something</a> -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-        <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div> -->
     </nav>
-    <div id="editorScenario"></div>
     <div class="d-flex mt-4 justify-content-center pb-3">
         <div class="card col-md-10 border-0 shadow-sm">
             <div class="card-body m-0 p-0 ">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="scenario-tab" data-bs-toggle="tab" data-bs-target="#scenario" 
-                        type="button" role="tab" aria-controls="scenario" aria-selected="true">Scenario</button>
+                        <button class="nav-link active" id="scenario-tab" data-bs-toggle="tab"
+                            data-bs-target="#scenario" type="button" role="tab" aria-controls="scenario"
+                            aria-selected="true">Scenario</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="character-tab" data-bs-toggle="tab" data-bs-target="#character"
@@ -65,17 +35,20 @@
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane p-3 fade show active" id="scenario" role="tabpanel" aria-labelledby="scenario-tab">
+                    <div class="tab-pane p-3 fade show active" id="scenario" role="tabpanel"
+                        aria-labelledby="scenario-tab">
                         <div class="d-flex justify-content-between border-bottom border-secondary px-1 mb-4 pb-2">
                             <h3 class="card-title mb-0">
                                 Scenario Configuration
                             </h3>
-                            <button class="btn btn-sc-level rounded-pill px-4" id="displayLevel" disabled>Level x</button>
+                            <button class="btn btn-sc-level rounded-pill px-4" id="displayLevel" disabled>Level
+                                x</button>
                         </div>
                         <form class="d-flex justify-content-center flex-wrap" id="scenarioForm"
                             action="{{ url_for('scenario_controller.submit_scenario') }}" method="POST">
                             <input type="hidden" id="scenarioID" name="scenarioID" />
-                            <input type="hidden" id="level" name="level"/>
+                            <input type="hidden" id="level" name="level" />
+                            <input type="hidden" id="hiddenCharacter" name="hiddenCharacter" />
                             <div class="scenarioImage mb-4 px-4">
                                 <div>
                                     <img class="rounded mb-3" id="selectedImage" src="page_photo/placeholder.png"
@@ -101,7 +74,7 @@
                                 <div class="form-group row mb-3">
                                     <label class="col-md-3" for="scenarioDescription">Scenario Description</label>
                                     <div class="col-md-9">
-                                        <textarea class="form-control" id="scenarioDescription" rows="5"
+                                        <textarea class="form-control" id="scenarioDescription" rows="3"
                                             placeholder="Create a hotel scenario which allows the learner to book a room."
                                             name="scenarioDescription"></textarea>
                                     </div>
@@ -110,7 +83,7 @@
                                     <label class="col-md-3" for="characterDescription">Character Description</label>
                                     <div class="col-md-9 input-group">
                                         <textarea class="rounded-0 rounded-top form-control w-100"
-                                            id="characterDescription" rows="5"
+                                            id="characterDescription" rows="3"
                                             placeholder="The ai character will act as a front desk officer in the hotel."
                                             name="characterDescription"></textarea>
                                     </div>
@@ -118,17 +91,34 @@
                                 <div class="form-group row mb-3">
                                     <label class="col-md-3" for="vocab">Vocabularies</label>
                                     <div class="col-md-9">
-                                        <textarea class="form-control" id="vocab" rows="2"
-                                            placeholder="Reservation, Availability, Occupancy"
-                                            name="vocab"></textarea>
+                                        <textarea class="form-control" id="vocab" rows="1"
+                                            placeholder="Reservation, Availability, Occupancy" name="vocab"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label class="col-md-3" for="grammar">Grammars</label>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control" id="grammar" rows="1"
+                                            placeholder="Past tense, Passive sentence" name="grammar"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label class="col-md-3" for="situationalChat">Situational Chat</label>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control" id="situationalChat" rows="1"
+                                            placeholder="Express rejection" name="situationalChat"></textarea>
                                     </div>
                                 </div>
 
                             </div>
 
                             <div class="d-flex justify-content-end w-100">
-                                <a class="btn px-5 link rounded-pill" href="http://127.0.0.1:5000/scenario/">Cancel</a>
-                                <button type="submit" class="btn btn-primary px-5 rounded-pill" id="submitScenario">Save</button>
+                                <a class="btn px-5 link rounded-pill"
+                                    href="http://localhost:5137/editor_scenario_page.html">Cancel</a>
+                                <button type="button" class="btn btn-primary px-5 rounded-pill"
+                                    id="go-to-configCharacter">Configure Character</button>
+                                <button type="submit" class="btn btn-primary px-5 rounded-pill d-none"
+                                    id="submitScenario">Save</button>
                             </div>
                         </form>
                     </div>
@@ -147,11 +137,27 @@
                                 <div class="btn-group">
                                     <select class="form-select" id="character-select">
                                     </select>
-                                  </div>
+                                </div>
+                                <div class="backgroundImage mb-4 mt-4">
+                                    <div>
+                                        <img class="rounded mb-3" id="selectedBackgroundImage" src="background/null.png"
+                                            alt="Background Image" style="width: 300px;" />
+                                    </div>
+                                    <div class="d-flex justify-content-center" style="width: 300px;">
+                                        <div data-mdb-ripple-init class="btn btn-primary rounded-pill"
+                                            style="width:200px;">
+                                            <label class="form-label" for="backgroundImage">Choose file</label>
+                                            <input type="file" class="form-control d-none" id="backgroundImage"
+                                                name="backgroundImage"
+                                                onchange="displaySelectedImage(event, 'selectedBackgroundImage')" />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end w-100">
-                            <a class="btn px-5 link rounded-pill" href="http://127.0.0.1:5000/scenario/">Cancel</a>
+                            <a class="btn px-5 link rounded-pill"
+                                href="http://localhost:5137/editor_scenario_page.html">Cancel</a>
                             <button id="btn-submit_form" class="btn btn-primary px-5 rounded-pill">Save</button>
                         </div>
                     </div>
@@ -160,7 +166,7 @@
         </div>
     </div>
 
-    <script type="module" src="/src/scenarioConfigure.jsx"></script>
+    <!-- <script type="module" src="/src/scenarioConfigure.jsx"></script> -->
     <script type="module" src="/src/configureCharacter.jsx"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -180,9 +186,31 @@
             }
         }
 
+        function uploadScenarioImage(imageType, imageFile) {
+            const imageFormData = new FormData();
+            console.log(imageFile)
+            imageFormData.append('scenarioImage', imageFile);
+            imageFormData.append('imageType', imageType);
+
+            fetch('http://localhost:5137/api/UploadImage', { // Adjust API route if necessary
+                method: 'POST',
+                body: imageFormData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Image uploaded:', data.filePath);
+                })
+                .catch(error => {
+                    console.error('Upload error:', error);
+                });
+        }
+
         $(document).ready(function () {
             // $("header").load("editor-header-nav.html")
 
+            $("#go-to-configCharacter").on("click", function () {
+                $("#character-tab").click()
+            })
             var lastScroll = 0;
             window.addEventListener("scroll", function () {
                 var editorHeader = document.querySelector(".editor-header");
@@ -191,7 +219,7 @@
                 var isScrollingDown = currentScroll > lastScroll;
 
                 if (isScrollingDown) {
-                    editorHeader.classList.add("hidden"); 
+                    editorHeader.classList.add("hidden");
                 } else {
                     editorHeader.classList.remove("hidden")
                 }
@@ -199,11 +227,8 @@
                 lastScroll = currentScroll;
             });
 
-
-
-
             $('#scenarioForm').on('submit', function (event) {
-                event.preventDefault(); 
+                event.preventDefault();
 
                 var formData = new FormData(this);
 
@@ -211,18 +236,39 @@
                     formData.delete('scenarioImage');
                 }
 
-                var fileInput = $('#scenarioImage')[0];
-                if (fileInput.files.length > 0) {
-                    formData.append('scenarioImage', fileInput.files[0].name);
-                    console.log('Selected file: ' + fileInput.files[0].name);
+                var scenarioImageFileInput = $('#scenarioImage')[0];
+                console.log(scenarioImageFileInput.files[0])
+                if (scenarioImageFileInput.files.length > 0) {
+                    formData.append('scenarioImage', scenarioImageFileInput.files[0].name);
+                    uploadScenarioImage('scenarioImage', scenarioImageFileInput.files[0]);
                 } else {
-                    formData.append('scenarioImage', "placeholder.png");
+                    formData.append('scenarioImage', $('#selectedImage').attr('src').replace('page_photo/', ''));
                 }
 
-                
-                formData.forEach(function (value, key) {
-                    console.log(key + ': ' + value);
-                });
+                console.log("character: " + $("#character-select").val())
+                if ($("#character-select").val() != null) {
+                    formData.append('characterFileName', $("#character-select").val())
+                } else if ($("#hiddenCharacter").val()) {
+                    formData.append('characterFileName', $("#hiddenCharacter").val())
+                } else {
+                    formData.append('characterFileName', "MaleCharacter1")
+                }
+
+                var backgroundImage = $('#backgroundImage')[0];
+                if (!backgroundImage.files[0]) {
+                    var imgSrc = $('#selectedBackgroundImage').attr('src');
+                    var updatedSrc = imgSrc.replace('background/', '');
+                    uploadScenarioImage('backgroundImage', backgroundImage.files[0]);
+                    if (updatedSrc == "null.png") {
+                        formData.append('backgroundImage', null);
+                    } else {
+                        formData.append('backgroundImage', updatedSrc);
+                    }
+                } else {
+                    formData.append('backgroundImage', backgroundImage.files[0].name);
+                }
+
+                console.log(formData)
 
                 $.ajax({
                     type: 'POST',
@@ -230,21 +276,22 @@
                     data: formData,
                     contentType: false, // Required for FormData
                     processData: false,
-                    error: function(xhr) {
+                    error: function (xhr) {
                         alert('Error: ' + xhr.responseText);
                     }
+                    // success here
                 })
             });
 
-            $(".dropdown-item").each(function (index, element){
-                $(element).on("click", function() {
+            $(".dropdown-item").each(function (index, element) {
+                $(element).on("click", function () {
                     $("#dropdown-btn").text($(element).text())
                 })
             });
 
         });
 
-        $("#btn-submit_form").on("click", function() {
+        $("#btn-submit_form").on("click", function () {
             $("#submitScenario").click();
         });
 

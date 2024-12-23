@@ -12,21 +12,17 @@ class ScenarioController(BaseHTTPRequestHandler):
     @scenario_controller.route('/scenario_configuration', methods=['GET'])
     def scenarioConfiguration():
         scenarioID = request.args.get('id', type=int)
+        level = request.args.get('level', type=int)
+        print(scenarioID)
+        print(level)
         # to find the scenario details
 
         if(scenarioID):
-            print("find the scenario details")
             scenario = Scenario.fetch_by_id(scenarioID)
             process = "loadScenario"
-            scenario = {
-                "id": scenario._id,
-                "name": scenario._name,
-                "image": scenario._image,
-                "scenarioDesc": scenario._scenarioDesc,
-                "characterDesc": scenario._characterDesc,
-                "vocab": scenario._vocab,
-                "level": scenario._level._id
-            }
+            scenario = scenario.to_dict()
+
+            print(scenario)
 
             payload = {
                 "process": process,
@@ -35,7 +31,6 @@ class ScenarioController(BaseHTTPRequestHandler):
 
             api_endpoint = "http://localhost:5137/api/ScenarioConfig"
 
-            print(scenario)
             try:
                 response = requests.post(api_endpoint, json=payload)
                 if response.status_code == 200:
@@ -44,7 +39,29 @@ class ScenarioController(BaseHTTPRequestHandler):
                     return jsonify({"error": f"Failed to post scenario, status code: {response.status_code}"}), response.status_code
             except Exception as e:
                 return jsonify({"error": str(e)}), 500
-        else:
+        elif (level is not None):
+            process = "addScenario"
+            level = {
+                "id": level
+            }
+
+            payload = {
+                "process": process,
+                "level": level
+            }
+
+            api_endpoint = "http://localhost:5137/api/ScenarioConfig"
+
+            try:
+                response = requests.post(api_endpoint, json=payload)
+                if response.status_code == 200:
+                    return redirect("http://localhost:5137/scenario_configuration.html")
+                else:
+                    return jsonify({"error": f"Failed to post scenario, status code: {response.status_code}"}), response.status_code
+            except Exception as e:
+                return jsonify({"error": str(e)}), 500
+        
+        else :
             return render_template('scenario_configuration.html')
        
        
@@ -54,8 +71,11 @@ class ScenarioController(BaseHTTPRequestHandler):
             scenarios = Scenario.fetch_all() # all scenario object
             api_endpoint = "http://localhost:5137/api/ScenarioConfig"
             requests.post(api_endpoint, json={})
+
+            scenarios_dict = [s.to_dict() for s in scenarios]
+            return jsonify(scenarios_dict)
             
-            return render_template('editor_scenario_page.html', scenarios=scenarios)
+            # return render_template('editor_scenario_page.html', scenarios=scenarios)
        
         except Exception as e:
             return jsonify({"error": str(e)}), 500
@@ -69,19 +89,24 @@ class ScenarioController(BaseHTTPRequestHandler):
         scenarioDesc = request.form['scenarioDescription']
         characterDesc = request.form['characterDescription']
         vocab = request.form['vocab']
+        grammar = request.form['grammar']
+        situationalChat = request.form['situationalChat']
+        characterFileName = request.form['characterFileName']
+        backgroundImage = request.form['backgroundImage']
         level = request.form['level']
 
+        print(scenarioID)
         try:
             if(scenarioID):
                 # update scenario details
-                scenario = Scenario(scenarioName, scenarioImage, scenarioDesc, characterDesc, vocab, level, scenarioID)
+                scenario = Scenario(scenarioName, scenarioImage, scenarioDesc, characterDesc, vocab, characterFileName, backgroundImage, grammar, situationalChat, level, scenarioID)
                 print(scenario)
                 scenario.update_scenario()
             else: 
                 # create new scenario
-                scenario = Scenario(scenarioName, scenarioImage, scenarioDesc, characterDesc, vocab, level)
-                scenario.create_scenario()
+                scenario = Scenario(scenarioName, scenarioImage, scenarioDesc, characterDesc, vocab, characterFileName, backgroundImage, grammar, situationalChat, level)
                 print(scenario)
+                scenario.create_scenario()
             
             return jsonify({"message": "Scenario created successfully"}), 200
        
@@ -100,6 +125,10 @@ class ScenarioController(BaseHTTPRequestHandler):
                 "scenarioDesc": scenario._scenarioDesc,
                 "characterDesc": scenario._characterDesc,
                 "vocab": scenario._vocab,
+                "grammar": scenario._grammar,
+                "situationalChat": scenario._situationalChat,
+                "characterFileName": scenario._characterFileName,
+                "backgroundImage": scenario._backgroundImage,
                 "level": scenario._level._id
             }
             return jsonify(scenario)

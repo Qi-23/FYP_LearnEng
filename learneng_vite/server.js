@@ -3,6 +3,7 @@ import { createServer } from 'vite';
 import { ChatBackend } from './src/api/ChatBackend.js';
 import { SummarizeContent } from './src/api/SummarizeContent.js';
 import { ScenarioConfig } from './src/api/ScenarioConfig.js';
+import { UploadImage } from './src/api/UploadImage.js';
 import cors from 'cors';
 
 const app = express();
@@ -27,6 +28,8 @@ async function startVite() {
   
   app.get('/api/ScenarioConfig', ScenarioConfig);
   app.post('/api/ScenarioConfig', ScenarioConfig);
+  
+  app.post('/api/UploadImage', UploadImage);
 
 
   // Use Vite's middleware to serve the frontend

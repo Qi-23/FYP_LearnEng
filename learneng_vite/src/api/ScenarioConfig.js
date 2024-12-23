@@ -1,4 +1,5 @@
 let scenario = null
+let level = null
 export const ScenarioConfig = async (req, res) => {
     if (req.method === "POST") {
         try {
@@ -7,15 +8,19 @@ export const ScenarioConfig = async (req, res) => {
                 let load = req.body
                 if (load.process && load.process === "loadScenario") {
                     scenario = load.scenario
-                    console.log("Scenario data:", scenario)
+                    res.status(200).json({ message: "Scenario processed successfully", scenario });
+                } else if (load.process && load.process === "addScenario") {
+                    level = load.level.id
+                    scenario = null
+                    res.status(200).json({ message: "New scenario processed successfully", level });
                 } else {
                     scenario = null
+                    level = null
+                    res.status(500).json({ message: "None Scenario"});
                 }
             } catch (error) {
                 console.error("Error parsing JSON:", error);
             }
-            // Process the scenario here
-            res.status(200).json({ message: "Scenario processed successfully", scenario });
         } catch (error) {
             console.error("Error:", error);
             res.status(500).json({ error: "Failed to process scenario." });
@@ -32,8 +37,13 @@ export const ScenarioConfig = async (req, res) => {
                 let load = await response.json();
                 console.log(load)
                 scenario = load
+                res.status(200).json({ message: "Scenario fetched successfully", scenario: scenario });
+            } else if (level) {
+                console.log(level)
+                res.status(200).json({ message: "Level fetched successfully", level: level });
+            } else {
+                res.status(300).json({ message: "error get"});
             }
-            res.status(200).json({ message: "Scenario fetched successfully", scenario: scenario });
         } catch (error) {
             console.error("Error fetching scenario:", error);
             res.status(500).json({ error: "Failed to fetch scenario." });

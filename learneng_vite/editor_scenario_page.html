@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/editor.css') }}">
+    <link rel="stylesheet" type="text/css" href="styles/editor.css">
 </head>
 
 <body>
@@ -25,8 +25,8 @@
         <div class="d-flex justify-content-between col-12">
             <div class="col-6 d-flex justify-content-start">
                 <h2>Scenarios</h2>
-                <a class="ms-4 btn btn-primary px-4 rounded-pill"
-                    href="/scenario/scenario_configuration?level=1" id="add-scenario">Add</a>
+                <a class="ms-4 btn btn-primary px-4 rounded-pill" href="/scenario/scenario_configuration?level=1"
+                    id="add-scenario">Add</a>
             </div>
             <select class="w-25 form-select" id="level-selection">
                 <option value="1">Level 1</option>
@@ -37,32 +37,58 @@
             </select>
         </div>
         <div class="d-flex justify-content-center flex-wrap mt-4 mx-4" id="scenarios">
-            {% for scenario in scenarios %}
-            <div class="card mx-3 mb-4 d-none level-{{ scenario._level._id }}" style="width:300px">
-                <div class="card-body">
-                    <img src="{{ url_for('static', filename='/page_photo/' + scenario._image) }}" class="w-100 mb-2"
-                        alt="Scenario Image">
-                    <h5 class="card-title">Scenario: {{ scenario._name }}</h5>
-                    <p class="card-text">{{ scenario._description }}</p>
-                    <a href="/scenario/scenario_configuration?id={{ scenario._id }}" class="btn btn-primary">Edit</a>
-                </div>
-            </div>
-            {% endfor %}
         </div>
-        <p class="col-12 lead w-100 text-center mt-5 d-none" id="no-scenario">———— &nbsp;&nbsp; No scenarios available &nbsp;&nbsp; ————</p>
+        <p class="col-12 lead w-100 text-center mt-5 d-none" id="no-scenario">———— &nbsp;&nbsp; No scenarios available
+            &nbsp;&nbsp; ————</p>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
 
         <script>
-            $(document).ready(function () {
-                $(".card").each(function () {
-                    if ($(this).hasClass("level-1")) {
-                        $(this).removeClass("d-none")
+            async function fetchScenarios() {
+                console.log("hihi")
+                try {
+                    const response = await fetch('http://127.0.0.1:5000/scenario/');
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch scenarios");
                     }
-                })
 
+                    const scenarios = await response.json();
+
+                    // Log the scenarios to check
+                    console.log(scenarios);
+
+                    // Example: Add them to a div
+                    const container = document.getElementById('scenarios');
+                    scenarios.forEach(scenario => {
+                        const div = document.createElement('div');
+                        div.classList.add(`levelClass`, `level-${scenario.level}`, `d-none`, 'card', 'mx-3', 'mb-4');
+                        div.style.width = "300px";
+
+                        div.innerHTML = 
+                        `<div class="card-body">` +
+                        `<img src="page_photo/${scenario.image}" class="w-100 mb-2" alt="Scenario Image">` +
+                        `<h5 class="card-title">Scenario: ${scenario.name}</h5>` +
+                        `<p class="card-text">${scenario.description}</p>` +
+                        `<a href="http://127.0.0.1:5000/scenario/scenario_configuration?id=${scenario.id}" class="btn btn-primary">Edit</a>` +
+                        `</div>`;
+
+                        container.appendChild(div);
+                    });
+
+                    $(".levelClass").each(function () {
+                        if ($(this).hasClass("level-1")) {
+                            $(this).removeClass("d-none")
+                        }
+                    })
+
+                } catch (error) {
+                    console.error("Error fetching scenarios:", error);
+                }
+            }
+
+            $(document).ready(function () {
                 $("#level-selection").on("change", function () {
                     let count = 0
                     let level_value = $(this).val()
@@ -85,6 +111,9 @@
                         $("#no-scenario").removeClass("d-none")
                     }
                 })
+
+                fetchScenarios();
+
             });
         </script>
 </body>
