@@ -5,8 +5,17 @@ export const ChatBackend = async (req, res) => {
         let response = "";
         try {
             const { response_type } = req.body
+            const { id } = req.body
+
             if (response_type == "init") {
-                response = await fetch("http://127.0.0.1:5000/start_chat", { method: 'POST' });
+                // post with scenario id
+                response = await fetch("http://127.0.0.1:5000/start_chat", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: id })
+                });
             } else if (response_type == "cont") {
                 response = await fetch("http://127.0.0.1:5000/next_chat", { method: 'POST' });
             }
@@ -19,9 +28,6 @@ export const ChatBackend = async (req, res) => {
             const data = await response.json();
             const audioName = data.audio_name;
             const audioType = data.audio_type;
-            // const audioName = "initial_output";
-            // const audioType = ".mp3";
-            console.log("Audio name from Python:", audioName);
 
             if (!audioName) {
                 throw new Error('Audio name is empty');

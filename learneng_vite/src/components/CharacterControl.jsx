@@ -60,8 +60,6 @@ export const CharacterControl = () => {
         setLoadingText("");
 
         $.get('http://127.0.0.1:5000/get_new_response', function (data) {
-          console.log("new response : " + data.new_response)
-          console.log("current response : " + response.current)
           if (response.current != data.new_response && data.new_response != '') {
             // console.log(data.new_response);
             response.current = data.new_response;

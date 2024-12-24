@@ -8,14 +8,14 @@ export const ChatProvider = ({ children }) => {
   const [chatStatus, setChatStatus] = useState(false);
   const [nextChat, setNextChat] = useState();
 
-  const getResponse = async (type) => {
+  const getResponse = async (type, id=null) => {
     setNextChat(false);
     const response = await fetch("/api/ChatBackend", {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // Ensure the correct header
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ response_type: type })
+      body: JSON.stringify({ response_type: type, id: id })
     });
 
     if (response.ok) {

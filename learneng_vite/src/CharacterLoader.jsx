@@ -9,8 +9,11 @@ function CharacterLoader() {
   const { getResponse, getChatStatus, nextChat } = useChat();
   const [init, setInit] = useState();
 
+  const queryParams = new URLSearchParams(window.location.search);
+  const id = queryParams.get("id");
+
   useEffect(() => {
-    getResponse("init");
+    getResponse("init", id);
     setInit(true);
   }, []);
 

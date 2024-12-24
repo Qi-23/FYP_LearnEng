@@ -153,7 +153,8 @@
         }
 
         /* Summary Button */
-        .end-btn, .review-btn {
+        .end-btn,
+        .review-btn {
             display: inline-block;
             padding: 12px 25px;
             font-size: 1rem;
@@ -167,18 +168,18 @@
         }
 
         .end-btn {
-            background-color: #FF6347; 
+            background-color: #FF6347;
             color: #fff;
         }
 
         .end-btn:hover {
-            background-color: #FF4500; 
+            background-color: #FF4500;
             transform: translateY(-3px);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
         }
 
         .review-btn {
-            background-color: #32CD32; 
+            background-color: #32CD32;
             color: #fff;
         }
 
@@ -227,7 +228,7 @@
 <body>
     <div class="header">
         <div class="icons">
-            <a href="level_page.html">
+            <a href="scenario_page.html">
                 <img src="page_photo/back.png" alt="Back">
             </a>
             <div class="level-indicator">Easy</div>
@@ -291,16 +292,11 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
 
-
     <script>
         $(document).ready(function () {
             let chatEnded = false;
 
             $("#btn-showSummaryContent").prop("disabled", false);
-            // Start the chat
-            // $.post('http://127.0.0.1:5000/start_chat', function (data) {
-            //     console.log(data.status);
-            // });
             $.post('http://127.0.0.1:5000/empty', function (data) {
                 console.log(data.status);
             });
@@ -333,35 +329,7 @@
                 }, 1000);
             }, 10000);
 
-            // setTimeout(function () {
-            //     setInterval(function () {
 
-            //     }, 1000);
-            // }, 10000);
-
-            // setInterval(function () {
-            //     $.get('http://127.0.0.1:5000/get_chat_history', function (data) {
-            //         $('#chatArea').empty();
-            //         data.forEach(function (message) {
-            //             if (message.role !== 'system') {  // Exclude system message
-            //                 var bubbleClass = message.role === 'user' ? 'user' : 'ai';
-            //                 $('#chatArea').append('<div class="chat-bubble ' + bubbleClass + '">' + message.content + '</div>');
-            //                 // console.log(bubbleClass + ": " + message.content);
-            //             }
-            //         });
-            //         // Scroll to the bottom of the chat area
-            //         $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
-
-            //         // Check if the chat has ended
-            //         if (data.length > 0 && data[data.length - 1].role === 'user' && data[data.length - 1].content.toLowerCase().includes('goodbye')) {
-            //             chatEnded = true;
-            //             $('#summaryBtn').removeClass('disabled');
-            //         } else {
-            //             chatEnded = false;
-            //             $('#summaryBtn').addClass('disabled');
-            //         }
-            //     });
-            // }, 1000);
         });
 
     </script>

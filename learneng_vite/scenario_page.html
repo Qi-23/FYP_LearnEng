@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scenario - Level 1</title>
   <script>
     function startChat() {
-        fetch('/start')
-            .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-            })
-            .catch(error => console.error('Error:', error));
+      fetch('/start')
+        .then(response => {
+          if (response.redirected) {
+            window.location.href = response.url;
+          }
+        })
+        .catch(error => console.error('Error:', error));
     }
   </script>
   <style>
@@ -182,18 +183,19 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Header -->
   <div class="header">
     <div class="icons">
-      <img src="../static/page_photo/back.png" alt="Back">
+      <img src="page_photo/back.png" alt="Back">
       <div class="level-indicator">Easy</div>
     </div>
     <div class="title">Scenario</div>
     <div class="icons">
-      <img src="../static/page_photo/home.png" alt="Home">
-      <img src="../static/page_photo/user.png" alt="Profile">
+      <img src="page_photo/home.png" alt="Home">
+      <img src="page_photo/user.png" alt="Profile">
     </div>
   </div>
 
@@ -201,20 +203,38 @@
   <div class="content">
 
     <!-- Scenario Cards -->
-    <div class="scenarios">
-      <div class="scenario-card">
+    <div class="scenarios" id="scenarios">
+      <!-- <div class="scenario-card">
         <div class="number">1</div>
-        <img src="../static/page_photo/hotel.png" alt="Booking Room">
+        <img src="page_photo/hotel.png" alt="Booking Room">
         <h3>Booking Room</h3>
         <p>Learn how to book a hotel room, from checking availability to making reservations.</p>
-        <a href="/learneng_vite/chatting.html">
+        <a href="chatting.html">
           <button onclick="startChat()">Start</button>
         </a>
-      </div>
+      </div> -->
 
-      <div class="scenario-card">
+      <!-- <div class="scenarios">
+        {% if scenario %}
+          <div class="scenario-card">
+            <div class="number">1</div>
+            <img src="page_photo/hotel.png" alt="Booking Room">
+              <h3>{{ scenario.ScenarioName }}</h3>
+              <p><strong>Scenario Description:</strong> {{ scenario.ScenarioDescription }}</p>
+              <p><strong>Character Description:</strong> {{ scenario.CharacterDescription }}</p>
+              <p><strong>Vocabulary:</strong> {{ scenario.Vocab }}</p>
+              <p><strong>Grammar:</strong> {{ scenario.Grammar }}</p>
+              <p><strong>Situational Chat:</strong> {{ scenario.SituationalChat }}</p>
+          </div>
+          {% else %}
+          <p>Scenario not found.</p>
+          {% endif %}
+    </div> -->
+
+
+      <!-- <div class="scenario-card">
         <div class="number">2</div>
-        <img src="../static/page_photo/taxi.png" alt="Taking Taxi">
+        <img src="page_photo/taxi.png" alt="Taking Taxi">
         <h3>Taking Taxi</h3>
         <p>Practice phrases for calling and directing a taxi to reach your destination smoothly.</p>
         <button>Start</button>
@@ -222,13 +242,52 @@
 
       <div class="scenario-card">
         <div class="number">3</div>
-        <img src="../static/page_photo/orderfood.png" alt="Ordering Meals">
+        <img src="page_photo/orderfood.png" alt="Ordering Meals">
         <h3>Ordering Meals</h3>
         <p>Get comfortable ordering meals at restaurants and learning related vocabulary.</p>
         <button>Start</button>
-      </div>
+      </div> -->
     </div>
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    async function fetchScenarios() {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/scenario/');
+        if (!response.ok) {
+          throw new Error("Failed to fetch scenarios");
+        }
+
+        // all scenarios returned here
+        const scenarios = await response.json();
+
+        const container = document.getElementById('scenarios');
+        let count = 0
+        scenarios.forEach(scenario => {
+          count = count +1;
+          const div = document.createElement('div');
+          div.classList.add(`scenario-card`);
+
+          div.innerHTML =
+            `<div class="number">${count}</div>` + 
+            `<img src="page_photo/${scenario.image}" alt="${scenario.image}">` +
+            `<h3>${scenario.name}</h3>` +
+            `<p>${scenario.scenarioDesc}</p>` +
+            `<a href="chatting.html?id=${scenario.id}"> <button onclick="startChat()">Start</button> </a>`;
+          container.appendChild(div);
+        });
+
+      } catch (error) {
+        console.error("Error fetching scenarios:", error);
+      }
+    }
+
+    $(document).ready(function () {
+      fetchScenarios();
+    });
+  </script>
+
 </body>
+
 </html>

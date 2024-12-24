@@ -140,6 +140,7 @@
                                 </div>
                                 <div class="backgroundImage mb-4 mt-4">
                                     <div>
+                                        <label class="form-control mb-2 px-1" style="background-color: transparent;" >Background Image : </label>
                                         <img class="rounded mb-3" id="selectedBackgroundImage" src="background/null.png"
                                             alt="Background Image" style="width: 300px;" />
                                     </div>
@@ -281,6 +282,7 @@
                     }
                     // success here
                 })
+                location.reload();
             });
 
             $(".dropdown-item").each(function (index, element) {

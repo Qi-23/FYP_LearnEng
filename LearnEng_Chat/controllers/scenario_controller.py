@@ -69,13 +69,11 @@ class ScenarioController(BaseHTTPRequestHandler):
     def scenarioList():
         try:
             scenarios = Scenario.fetch_all() # all scenario object
-            api_endpoint = "http://localhost:5137/api/ScenarioConfig"
-            requests.post(api_endpoint, json={})
+            # api_endpoint = "http://localhost:5137/api/ScenarioConfig"
+            # requests.post(api_endpoint, json={})
 
             scenarios_dict = [s.to_dict() for s in scenarios]
-            return jsonify(scenarios_dict)
-            
-            # return render_template('editor_scenario_page.html', scenarios=scenarios)
+            return jsonify(scenarios_dict) # return all scenarios
        
         except Exception as e:
             return jsonify({"error": str(e)}), 500
@@ -118,19 +116,7 @@ class ScenarioController(BaseHTTPRequestHandler):
         try:
             scenarioID = request.args.get('id', type=int)
             scenario = Scenario.fetch_by_id(scenarioID)
-            scenario = {
-                "id": scenario._id,
-                "name": scenario._name,
-                "image": scenario._image,
-                "scenarioDesc": scenario._scenarioDesc,
-                "characterDesc": scenario._characterDesc,
-                "vocab": scenario._vocab,
-                "grammar": scenario._grammar,
-                "situationalChat": scenario._situationalChat,
-                "characterFileName": scenario._characterFileName,
-                "backgroundImage": scenario._backgroundImage,
-                "level": scenario._level._id
-            }
+            scenario = scenario.to_dict()
             return jsonify(scenario)
        
         except Exception as e:
