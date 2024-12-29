@@ -316,6 +316,7 @@ from voice_assistant.text_to_speech import text_to_speech
 from voice_assistant.utils import delete_file
 from voice_assistant.config import Config
 from voice_assistant.api_key_manager import get_transcription_api_key, get_response_api_key, get_tts_api_key
+import re
 
 import json
 from model.scenario import Scenario
@@ -416,6 +417,11 @@ def continue_chat(chat_history):
         response_api_key = get_response_api_key()
 
         new_response = response_text = generate_response(Config.RESPONSE_MODEL, response_api_key, chat_history, Config.LOCAL_MODEL_PATH)
+
+        # Filter out unwanted parenthetical phrases using a more robust regular expression
+        response_text = re.sub(r'\s?\(.*?\)\s?', ' ', response_text)
+        response_text = re.sub(r'[^\w\s]', '', response_text)
+
         logging.info(Fore.CYAN + "Response: " + response_text + Fore.RESET)
 
         # Check for end request during response generation
