@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -105,7 +106,10 @@
         .ai-name {
             font-size: 1.5rem;
             color: #333;
-            margin-bottom: 5px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
         }
 
         .ai-description {
@@ -153,42 +157,6 @@
         }
 
         /* Summary Button */
-        .end-btn,
-        .review-btn {
-            display: inline-block;
-            padding: 12px 25px;
-            font-size: 1rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-radius: 8px;
-            text-decoration: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin: 0 10px;
-        }
-
-        .end-btn {
-            background-color: #FF6347;
-            color: #fff;
-        }
-
-        .end-btn:hover {
-            background-color: #FF4500;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .review-btn {
-            background-color: #32CD32;
-            color: #fff;
-        }
-
-        .review-btn:hover {
-            background-color: #228B22;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
-        }
-
         ul {
             display: block !important;
         }
@@ -222,6 +190,90 @@
             background-color: #687dc2;
             color: #f7faff;
         }
+
+        /* Buttons */
+        .end-btn,
+        .summary-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 0 10px;
+            border: none;
+            /* Remove default border */
+            outline: none;
+            /* Remove focus outline */
+        }
+
+        .end-btn {
+            background-color: #dc3545;
+            /* Red color */
+            color: #fff;
+            border: 2px solid #dc3545;
+            /* Red border */
+        }
+
+        .end-btn:hover {
+            background-color: #c82333;
+            /* Darker red on hover */
+            border-color: #c82333;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .end-btn:active {
+            background-color: #bd2130;
+            /* Even darker red on active */
+            border-color: #bd2130;
+            transform: translateY(-1px);
+            /* Move slightly up on click */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .summary-btn {
+            background-color: #28a745;
+            /* Green color */
+            color: #fff;
+            border: 2px solid #28a745;
+            /* Green border */
+        }
+
+        .summary-btn:hover {
+            background-color: #218838;
+            /* Darker green on hover */
+            border-color: #218838;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .summary-btn:active {
+            background-color: #1e7e34;
+            /* Even darker green on active */
+            border-color: #1e7e34;
+            transform: translateY(-1px);
+            /* Move slightly up on click */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .end-message {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #dc3545;
+            /* Red color for emphasis */
+            margin-top: 10px;
+        }
+        .timer-message {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #7F8FFF;
+            /* Red color for emphasis */
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -245,7 +297,7 @@
             <!-- AI Character -->
             <div id="root" class="h-100 w-100"></div>
             <div class="ai-name">Joseph</div>
-            <div class="ai-description">Description</div>
+            <!-- <div class="ai-description">Description</div> -->
         </div>
 
         <div class="right-panel col-6">
@@ -256,11 +308,12 @@
 
             <!-- Buttons -->
             <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+                <button class="end-btn" id="endBtn">End</button>
                 <button class="summary-btn" data-bs-toggle="modal" data-bs-target="#summarize"
                     id="btn-showSummaryContent" disabled>Review</button>
             </div>
-            <!-- <button class="end-btn">End</button> -->
-            <!-- <button class="review-btn">Review</button> -->
+            <div id="endMessage" class="end-message"></div>
+            <div id="timerMessage" class="timer-message"></div>
         </div>
 
         <div class="modal fade" id="summarize" tabindex="-1" role="dialog" aria-labelledby="summarizeTitle"
@@ -293,45 +346,94 @@
         crossorigin="anonymous"></script>
 
     <script>
-        $(document).ready(function () {
+        jQuery(document).ready(function ($) {
             let chatEnded = false;
+            let fetchChatInterval;
+            let chatTimer;
 
-            $("#btn-showSummaryContent").prop("disabled", false);
             $.post('http://127.0.0.1:5000/empty', function (data) {
-                console.log(data.status);
+                console.log("Chat initialized:", data.status);
             });
 
-            // Fetch and display chat history every second
-            let user_input = "";
-            let response = "";
-            $('#chatArea').empty();
-            setTimeout(function () {
-                setInterval(function () {
-                    $.get('http://127.0.0.1:5000/get_user_input', function (data) {
-                        if (user_input != data.new_user_input && data.new_user_input != '') {
-                            // console.log(data.new_user_input);
-                            user_input = data.new_user_input;
+            //start chat timer function
+            function startChatTimer() {
+                let totalTime = 3 * 60; // 3 minutes in seconds
+                let warningTime = 2 * 60; // 2 minutes in seconds
 
-                            $('#chatArea').append('<div class="chat-bubble ' + 'user' + '">' + user_input + '</div>');
-                            // Scroll to the bottom of the chat area
-                            $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
-                        }
+                chatTimer = setInterval(function () {
+                    totalTime--;
 
-                        // // Check if the chat has ended
-                        // if (data.length > 0 && data[data.length - 1].role === 'user' && data[data.length - 1].content.toLowerCase().includes('goodbye')) {
-                        //     chatEnded = true;
-                        //     $('#endBtn').removeClass('disabled');
-                        // } else {
-                        //     chatEnded = false;
-                        //     $('#endBtn').addClass('disabled');
-                        // }
-                    });
+                    if (totalTime <= warningTime && totalTime > warningTime - 2) {
+                        let minutes = Math.floor(totalTime / 60);
+                        let seconds = totalTime % 60;
+                        $("#timerMessage").text(`Hurry up! Only ${minutes} minutes ${seconds} seconds left.`);
+                    }
+
+                    if (totalTime <= 0) {
+                        clearInterval(chatTimer);
+                        endChat("Time's up! The chat has ended.");
+                    }
                 }, 1000);
-            }, 10000);
+            }
 
+            //end chat function
+            function endChat(message) {
+                if (!chatEnded) {
+                    chatEnded = true;
+                    console.log("Chat ended:", message);
+                    //clear the chat fetching interval and timer
+                    clearInterval(fetchChatInterval);
+                    clearInterval(chatTimer);
 
+                    //enable the Review button
+                    $("#btn-showSummaryContent").prop("disabled", false);
+                    // Update the end message with the provided message
+                    $("#endMessage").text(message);
+
+                    //send request to update status to "ended"
+                    $.post('http://127.0.0.1:5000/update_status_to_ended', function (data) {
+                        if (data === "success") {
+                            console.log("Chat status updated to 'ended'.");
+                        }
+                    });
+                }
+            }
+
+            //fetch and display user input & AI response
+            let user_input = "";
+            $('#chatArea').empty();
+
+            function startFetching() {
+                fetchChatInterval = setInterval(function () {
+                    if (!chatEnded) {
+                        $.get('http://127.0.0.1:5000/get_user_input', function (data) {
+                            if (user_input != data.new_user_input && data.new_user_input != '') {
+                                user_input = data.new_user_input;
+                                $('#chatArea').append('<div class="chat-bubble user">' + user_input + '</div>');
+                                $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
+                            }
+                        });
+
+                        //fetch AI response
+                        $.get('http://127.0.0.1:5000/get_new_response', function (data) {
+                            if (data.new_response != '') {
+                                $('#chatArea').append('<div class="chat-bubble ai">' + data.new_response + '</div>');
+                                $('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
+                            }
+                        });
+                    }
+                }, 1000);
+            }
+
+            //start chat timer & fetching data when the page loads
+            startChatTimer();
+            startFetching();
+
+            //end button function
+            $('#endBtn').click(function () {
+                endChat("You have ended the chat. Click 'Review' to see the summary.");
+            });
         });
-
     </script>
 </body>
 

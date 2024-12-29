@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Body */
+        body {
+            background-color: #f0f4fd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            background-color: #799DEC;
+            color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Circle Buttons */
+        .circle-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        .circle-buttons a {
+            margin: 0 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .circle-buttons img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #799DEC;
+            transition: transform 0.2s;
+        }
+
+        .circle-buttons img:hover {
+            transform: scale(1.1);
+        }
+
+        .circle-buttons span {
+            display: block;
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        WELCOME
+    </div>
+
+    <div class="circle-buttons">
+        <a href="teacher.html">
+            <img src="page_photo/teacher.png" alt="Teacher">
+            <span>Teacher</span>
+        </a>
+        <a href="home.html">
+            <img src="page_photo/learner.png" alt="Learner">
+            <span>Learner</span>
+        </a>
+    </div>
+</body>
+</html>

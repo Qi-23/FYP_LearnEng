@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Level</title>
+  <style>
+    /* Reset styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* Body */
+    body {
+      background-color: #f0f4fd;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      color: #333;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+      background-color: #799DEC;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .header .title {
+      color: #fff;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    /* Icons */
+    .header .icons {
+      display: flex;
+      align-items: center;
+    }
+
+    .header .icons img {
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-right: 10px;
+      filter: brightness(0) invert(1);
+    }
+
+    .header .icons img:hover {
+      transform: scale(1.1);
+    }
+
+    /* Main Section */
+    .content {
+      width: 100%;
+      text-align: center;
+      margin-top: 30px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Word */
+    .word {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #799DEC;
+    }
+
+    /* Level Cards Container */
+    .levels {
+      display: flex;
+      gap: 20px;
+    }
+
+    /* Level Card */
+    .level-card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      width: 200px;
+      text-align: center;
+      padding: 20px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 1px solid #e0e0e0;
+    }
+
+    .level-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+      border: 1px solid #799DEC;
+    }
+
+    .level-card h3 {
+      font-size: 1.5rem;
+      color: #333;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .level-card p {
+      font-size: 1rem;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="icons">
+      <img src="page_photo/logo.png" alt="Back">
+    </div>
+    <div class="title">Home</div>
+    <div class="icons">
+      <img src="page_photo/home.png" alt="Home">
+      <img src="page_photo/user.png" alt="Profile">
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Header -->
+    <div class="word">Select Level to Practice</div>
+
+    <!-- Level Cards -->
+    <div class="levels" id="levels">
+    </div>
+  </div>
+
+  <script>
+    async function fetchLevels() {
+      try {
+
+        const queryParams = new URLSearchParams(window.location.search);
+        const levelId = queryParams.get("levels");
+
+        const levels = await response.json();
+        const container = document.getElementById('levels');
+
+        levels.forEach(scenario => {
+          if (level.id == 1) {
+            const div = document.createElement('div');
+            div.classList.add(`level-card`);
+            div.innerHTML =
+              `<h3>${level.name}</h3>` +
+              `<a href="scenario_page.html?levelId=${scenario.level}"> <button>Start</button> </a>`;
+            container.appendChild(div);
+          } else if (level.id == 2) {
+            const div = document.createElement('div');
+            div.classList.add(`level-card`);
+            div.innerHTML =
+              `<h3>${level.name}</h3>` +
+              `<a href="scenario_page.html?levelId=${scenario.level}"> <button>Start</button> </a>`;
+            container.appendChild(div);
+          } else if (level.id == 3) {
+            const div = document.createElement('div');
+            div.classList.add(`level-card`);
+            div.innerHTML =
+              `<h3>${level.name}</h3>` +
+              `<a href="scenario_page.html?levelId=${scenario.level}"> <button>Start</button> </a>`;
+            container.appendChild(div);
+          }
+        });
+
+      } catch (error) {
+        console.error("Error fetching levels:", error);
+      }
+    }
+
+    $(document).ready(function () {
+      fetchLevels();
+    });
+  </script>
+</body>
+
+</html>
