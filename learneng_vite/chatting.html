@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -267,6 +266,7 @@
             /* Red color for emphasis */
             margin-top: 10px;
         }
+
         .timer-message {
             text-align: center;
             font-size: 1.2rem;
@@ -357,8 +357,8 @@
 
             //start chat timer function
             function startChatTimer() {
-                let totalTime = 3 * 60; // 3 minutes in seconds
-                let warningTime = 2 * 60; // 2 minutes in seconds
+                let totalTime = 2 * 60; // 3 minutes in seconds
+                let warningTime = 1 * 60; // 2 minutes in seconds
 
                 chatTimer = setInterval(function () {
                     totalTime--;
@@ -389,6 +389,8 @@
                     $("#btn-showSummaryContent").prop("disabled", false);
                     // Update the end message with the provided message
                     $("#endMessage").text(message);
+                    //clear the timer message
+                    $("#timerMessage").text("");
 
                     //send request to update status to "ended"
                     $.post('http://127.0.0.1:5000/update_status_to_ended', function (data) {
