@@ -110,6 +110,8 @@
 #     app.run(debug=True)
 
 
+# test.py
+
 from colorama import Fore, init
 from flask import Flask, render_template, request, jsonify
 import threading
@@ -122,8 +124,10 @@ from http.server import HTTPServer
 import importlib
 
 from dao.dbConnection import DBConnection
-from controllers.scenario_controller import scenario_controller  # Import scenario_controller blueprint
+from controllers.scenario_controller import scenario_controller
+from controllers.level_controller import level_controller
 from model.scenario import Scenario
+from model.level import Level
 
 app = Flask(__name__)
 CORS(app)
