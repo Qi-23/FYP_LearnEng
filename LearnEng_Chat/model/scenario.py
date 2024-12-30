@@ -144,3 +144,59 @@ class Scenario:
     def __str__(self):
         return f'ScenarioID: {self._id} \nScenario Name: {self._name} \nScenario Image: {self._image} \nScenario Description: {self._scenarioDesc} \nCharacter Description: {self._characterDesc} \nVocab: {self._vocab} \nLevel: {self._level._id}'
     
+# model/scenario.py
+
+# from dao.dbConnection import DBConnection
+# from model.level import Level
+
+# class Scenario: 
+#     _tableName = "Scenario"
+#     _idCol = "ScenarioID"
+#     _nameCol = "ScenarioName"
+#     _id = None
+#     _name = None
+#     _image = None
+#     _scenarioDesc = None
+#     _characterDesc = None
+#     _vocab = None
+#     _grammar = None
+#     _situationalChat = None
+#     _characterFileName = None
+#     _backgroundImage = None
+#     _level = None
+
+#     def __init__(self, name, image, scenarioDesc, characterDesc, vocab, characterFileName, backgroundImage, grammar, situationalChat, level, id=None):
+#         self._id = id
+#         self._name = name
+#         self._image = image              # image path
+#         self._scenarioDesc = scenarioDesc
+#         self._characterDesc = characterDesc
+#         self._vocab = vocab
+#         self._grammar = grammar
+#         self._situationalChat = situationalChat
+#         self._characterFileName = characterFileName
+#         self._backgroundImage = backgroundImage
+#         self._level = level if isinstance(level, Level) else self.getLevel(level)
+
+#     def setName(self, name):
+#         self._name = name
+    
+#     def setImage(self, image):
+#         self._image = image
+
+#     def setScenarioDesc(self, scenarioDesc):
+#         self._scenarioDesc = scenarioDesc
+
+#     def setCharacterDesc(self, characterDesc):
+#         self._characterDesc = characterDesc
+
+#     def setVocab(self, vocab):
+#         self._vocab = vocab
+
+#     def setLevel(self, level):
+#         self._level = self.getLevel(level)
+
+#     def getLevel(self, level=None):
+#         if level is None:
+#             return self._level
+        

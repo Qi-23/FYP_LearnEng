@@ -189,8 +189,10 @@
   <!-- Header -->
   <div class="header">
     <div class="icons">
-      <img src="page_photo/back.png" alt="Back">
-      <div class="level-indicator">Easy</div>
+      <a href="home.html">
+        <img src="page_photo/back.png" alt="Back">
+      </a>
+      <div id="levelIndicator" class="level-indicator"></div>
     </div>
     <div class="title">Scenario</div>
     <div class="icons">
@@ -203,91 +205,11 @@
   <div class="content">
 
     <!-- Scenario Cards -->
-    <div class="scenarios" id="scenarios">
-      <!-- <div class="scenario-card">
-        <div class="number">1</div>
-        <img src="page_photo/hotel.png" alt="Booking Room">
-        <h3>Booking Room</h3>
-        <p>Learn how to book a hotel room, from checking availability to making reservations.</p>
-        <a href="chatting.html">
-          <button onclick="startChat()">Start</button>
-        </a>
-      </div> -->
-
-      <!-- <div class="scenarios">
-        {% if scenario %}
-          <div class="scenario-card">
-            <div class="number">1</div>
-            <img src="page_photo/hotel.png" alt="Booking Room">
-              <h3>{{ scenario.ScenarioName }}</h3>
-              <p><strong>Scenario Description:</strong> {{ scenario.ScenarioDescription }}</p>
-              <p><strong>Character Description:</strong> {{ scenario.CharacterDescription }}</p>
-              <p><strong>Vocabulary:</strong> {{ scenario.Vocab }}</p>
-              <p><strong>Grammar:</strong> {{ scenario.Grammar }}</p>
-              <p><strong>Situational Chat:</strong> {{ scenario.SituationalChat }}</p>
-          </div>
-          {% else %}
-          <p>Scenario not found.</p>
-          {% endif %}
-    </div> -->
-
-
-      <!-- <div class="scenario-card">
-        <div class="number">2</div>
-        <img src="page_photo/taxi.png" alt="Taking Taxi">
-        <h3>Taking Taxi</h3>
-        <p>Practice phrases for calling and directing a taxi to reach your destination smoothly.</p>
-        <button>Start</button>
-      </div>
-
-      <div class="scenario-card">
-        <div class="number">3</div>
-        <img src="page_photo/orderfood.png" alt="Ordering Meals">
-        <h3>Ordering Meals</h3>
-        <p>Get comfortable ordering meals at restaurants and learning related vocabulary.</p>
-        <button>Start</button>
-      </div> -->
-    </div>
+    <div class="scenarios" id="scenarios"></div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    async function fetchScenarios() {
-      try {
-        const response = await fetch('http://127.0.0.1:5000/scenario/');
-        if (!response.ok) {
-          throw new Error("Failed to fetch scenarios");
-        }
-
-        // all scenarios returned here
-        const scenarios = await response.json();
-
-        const container = document.getElementById('scenarios');
-        let count = 0
-        scenarios.forEach(scenario => {
-          count = count +1;
-          const div = document.createElement('div');
-          div.classList.add(`scenario-card`);
-
-          div.innerHTML =
-            `<div class="number">${count}</div>` + 
-            `<img src="page_photo/${scenario.image}" alt="${scenario.image}">` +
-            `<h3>${scenario.name}</h3>` +
-            `<p>${scenario.scenarioDesc}</p>` +
-            `<a href="chatting.html?id=${scenario.id}"> <button onclick="startChat()">Start</button> </a>`;
-          container.appendChild(div);
-        });
-
-      } catch (error) {
-        console.error("Error fetching scenarios:", error);
-      }
-    }
-
-    $(document).ready(function () {
-      fetchScenarios();
-    });
-  </script>
-  <!-- <script>
     // Function to get query parameter from URL
     function getQueryParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -297,7 +219,7 @@
     async function fetchScenarios() {
       try {
         // Get levelId from URL
-        const levelId = getQueryParam('levelId');
+        const levelId = getQueryParam('level');
 
         // Fetch level information only if levelId is not null
         let levelName = "";
@@ -308,12 +230,13 @@
           }
           const level = await levelResponse.json();
           levelName = level.name;
-
+          console.log(levelName)
           // Update level-indicator text
           document.getElementById('levelIndicator').innerText = levelName;
         }
 
-        const response = await fetch('http://127.0.0.1:5000/scenario/');
+        const response = await fetch(`http://127.0.0.1:5000/scenario?level=${levelId}`);
+
         if (!response.ok) {
           throw new Error("Failed to fetch scenarios");
         }
@@ -322,10 +245,7 @@
         const container = document.getElementById('scenarios');
         let count = 0;
 
-        // Filter scenarios based on levelId
-        const filteredScenarios = scenarios.filter(scenario => scenario.levelId == levelId);
-
-        filteredScenarios.forEach(scenario => {
+        scenarios.forEach(scenario => {
           count++;
           const div = document.createElement('div');
           div.classList.add(`scenario-card`);
@@ -347,8 +267,7 @@
     $(document).ready(function () {
       fetchScenarios();
     });
-  </script> -->
-
+  </script>
 </body>
 
 </html>

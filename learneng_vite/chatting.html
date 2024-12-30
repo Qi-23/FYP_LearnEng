@@ -204,22 +204,17 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
             margin: 0 10px;
             border: none;
-            /* Remove default border */
             outline: none;
-            /* Remove focus outline */
         }
 
         .end-btn {
             background-color: #dc3545;
-            /* Red color */
             color: #fff;
             border: 2px solid #dc3545;
-            /* Red border */
         }
 
         .end-btn:hover {
             background-color: #c82333;
-            /* Darker red on hover */
             border-color: #c82333;
             transform: translateY(-3px);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
@@ -227,24 +222,19 @@
 
         .end-btn:active {
             background-color: #bd2130;
-            /* Even darker red on active */
             border-color: #bd2130;
             transform: translateY(-1px);
-            /* Move slightly up on click */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .summary-btn {
             background-color: #28a745;
-            /* Green color */
             color: #fff;
             border: 2px solid #28a745;
-            /* Green border */
         }
 
         .summary-btn:hover {
             background-color: #218838;
-            /* Darker green on hover */
             border-color: #218838;
             transform: translateY(-3px);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
@@ -252,10 +242,8 @@
 
         .summary-btn:active {
             background-color: #1e7e34;
-            /* Even darker green on active */
             border-color: #1e7e34;
             transform: translateY(-1px);
-            /* Move slightly up on click */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
@@ -263,7 +251,6 @@
             text-align: center;
             font-size: 1.2rem;
             color: #dc3545;
-            /* Red color for emphasis */
             margin-top: 10px;
         }
 
@@ -271,7 +258,6 @@
             text-align: center;
             font-size: 1.2rem;
             color: #7F8FFF;
-            /* Red color for emphasis */
             margin-top: 10px;
         }
     </style>
@@ -306,6 +292,9 @@
                 <text_area id="convert_text"></text_area>
             </div>
 
+            <div style="color: #2b3c74; font-family: 'Courier New', Courier, monospace;">
+                ***Our conversation is limited to 10 minutes.
+            </div>
             <!-- Buttons -->
             <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
                 <button class="end-btn" id="endBtn">End</button>
@@ -366,7 +355,7 @@
                     if (totalTime <= warningTime && totalTime > warningTime - 2) {
                         let minutes = Math.floor(totalTime / 60);
                         let seconds = totalTime % 60;
-                        $("#timerMessage").text(`Hurry up! Only ${minutes} minutes ${seconds} seconds left.`);
+                        $("#timerMessage").text(`The chat will end in ${minutes} minutes ${seconds} seconds`);
                     }
 
                     if (totalTime <= 0) {

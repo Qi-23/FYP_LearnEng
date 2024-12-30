@@ -11,6 +11,7 @@ function CharacterLoader() {
 
   const queryParams = new URLSearchParams(window.location.search);
   const id = queryParams.get("id");
+  console.log(id);
 
   useEffect(() => {
     getResponse("init", id);
