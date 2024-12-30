@@ -1,0 +1,127 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    background-color: #FFFBF6;
+}
+
+.editor-header {
+    z-index: 999;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+    position: sticky;
+    top: 0;
+    background-color: #F6E0C8;
+}
+
+.editor-header.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.btn:hover, .btn:focus, .btn:active {
+    color: #c48848;
+    background-color: #f5f4f4;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.btn-primary {
+    color: #4C4C4C;
+    background-color: #F6E9DB;
+    border-color: #F6E9DB;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #dbc8b0;
+    border-color: #dbc8b0;
+}
+
+.btn-outline-primary.dropdown-toggle:focus {
+    background-color: #fff;
+}
+
+.btn-primary:focus,
+.btn-primary:active,
+.btn-outline-primary.dropdown-toggle.show,
+.dropdown-item:focus,
+.dropdown-item:active {
+    color: #fff !important;
+    background-color: #d2bfa9 !important;
+    border-color: #d2bfa9 !important;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #dbc8b0;
+    border-color: #dbc8b0;
+}
+
+.btn-outline-primary {
+    color: #c48848;
+    border-color: #c48848;
+}
+
+.btn-outline-secondary:hover {
+    color: #2b2b2b;
+    background-color: #c2c2c2;
+    border-color: #dbc8b0;
+}
+
+.btn-outline-danger:hover, .btn-outline-danger:focus, .btn-outline-danger:active {
+    color: #f0f0f0;
+    background-color: #e56d6d;
+}
+
+.btn-head-primary:hover, .btn-head-primary:focus, .btn-head-primary:active {
+    color: #fff;
+    background-color: #d5af87;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active {
+    /* color: #c48848; */
+    border-color: #c48848;
+}
+
+.btn-sc-level {
+    color: #000000;
+    background-color: #F2E8DE;
+    border-color: #F2E8DE;
+}
+
+.btn:focus,
+.btn:active {
+    outline: none !important;
+    box-shadow: none;
+}
+
+.btn-conf-character {
+    margin-left: 0 !important;
+}
+
+.btn-conf-character:hover,
+.btn-conf-character:focus,
+.form-group .btn-conf-character:active {
+    outline: none !important;
+    box-shadow: none;
+}
+
+@media (min-width: 768px) {
+    .col-md-9 {
+        flex: 0 0 auto;
+        width: 75% !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .textfield {
+        flex: 1;
+    }
+}
+
+.form-control {
+    border: none;
+    background-color: #f0f1f3;
+}

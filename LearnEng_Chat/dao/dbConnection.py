@@ -6,8 +6,8 @@ class DBConnection:
 
     _connection = None
     _host = "localhost"
-    _user = "user_name"         # change to your own user's name
-    _password = "password"      # change to your the user's password
+    _user = "root"         # change to your own user's name
+    _password = "shanyi"      # change to your the user's password
     _database = "learnengdb"
 
     @classmethod
@@ -54,22 +54,22 @@ class DBConnection:
     @classmethod
     def get_connection(cls):
         if not cls.is_connection_alive():
+            cls.connect()
             print("db connection lost")
         elif cls._connection is None:
             raise Exception("Database not connected.")
         return cls._connection
     
     @classmethod
-    def execute_query(cls, query):
+    def execute_query(cls, query, params=None):
         try:
             conn = cls.get_connection()
-            cursor = conn.cursor()
-            cursor.execute(query)
-
-            conn.commit()
-        except Error as err:
-            print(f"An error occurred during query execution: {err}")
-            return None
+            with conn.cursor() as cursor:
+                cursor.execute(query, params)
+                conn.commit()
+        except Exception as e:
+            print(f"An error occurred during execute_query: {e}")
+            raise
 
     @classmethod
     def read_query(cls, query):
@@ -83,27 +83,26 @@ class DBConnection:
             print(f"Error while retrieving data: {err}")
 
     @classmethod
-    def fetch_all(cls, query):
-        cursor = cls.read_query(query)
-
-        result = cursor.fetchall() if cursor else []
-        cursor.close()
-        return result
-    
-    @classmethod
-    def fetch_one(cls, query):
+    def fetch_all(cls, query, params=None):
         try:
             conn = cls.get_connection()
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute(query)
-
-            result = cursor.fetchone()
-            cursor.close()
-            return result
-
-        except Error as err:
-            print(f"An error occurred during fetch_one: {err}")
-            return None
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute(query, params)
+                return cursor.fetchall()
+        except Exception as e:
+            print(f"An error occurred during fetch_all: {e}")
+            raise
+    
+    @classmethod
+    def fetch_one(cls, query, params=None):
+        try:
+            conn = cls.get_connection()
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute(query, params)
+                return cursor.fetchone()
+        except Exception as e:
+            print(f"An error occurred during fetch_one: {e}")
+            raise
 
     @classmethod
     def close_connection(cls):

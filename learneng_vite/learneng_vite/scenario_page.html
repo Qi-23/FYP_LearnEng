@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scenario - Level 1</title>
+  <script>
+    function startChat() {
+      fetch('/start')
+        .then(response => {
+          if (response.redirected) {
+            window.location.href = response.url;
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+  </script>
+  <style>
+    /* Reset styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* Body */
+    body {
+      background-color: #f0f4fd;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      color: #333;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+      background-color: #799DEC;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .header .title {
+      color: #fff;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    /* Icons */
+    .header .icons {
+      display: flex;
+      align-items: center;
+    }
+
+    .header .icons img {
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-right: 10px;
+      filter: brightness(0) invert(1);
+    }
+
+    .header .icons img:hover {
+      transform: scale(1.1);
+    }
+
+    /* Level Indicator */
+    .header .level-indicator {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      border: 2px solid #fff;
+      border-radius: 8px;
+      padding: 3px 8px;
+      margin-left: 10px;
+    }
+
+    /* Main Section */
+    .content {
+      width: 100%;
+      text-align: center;
+      margin-top: 30px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Scenario Cards */
+    .scenarios {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .scenario-card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      max-width: 100%;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-align: center;
+      padding-bottom: 15px;
+      border: 1px solid #e0e0e0;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .scenario-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+      border: 1px solid #799DEC;
+    }
+
+    .scenario-card .number {
+      font-size: 2rem;
+      color: #799DEC;
+      font-weight: bold;
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      background-color: #f0f4fd;
+      border: 2px solid #799DEC;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .scenario-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-bottom: 1px solid #ddd;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .scenario-card h3 {
+      font-size: 1.4rem;
+      color: #333;
+      font-weight: bold;
+      padding: 10px;
+    }
+
+    .scenario-card p {
+      font-size: 1rem;
+      color: #666;
+      padding: 0 15px;
+      line-height: 1.4;
+    }
+
+    .scenario-card button {
+      margin-top: 10px;
+      padding: 8px 20px;
+      font-size: 0.9rem;
+      color: #fff;
+      background-color: #799DEC;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .scenario-card button:hover {
+      background-color: #5a88d6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="icons">
+      <a href="home.html">
+        <img src="page_photo/back.png" alt="Back">
+      </a>
+      <div id="levelIndicator" class="level-indicator"></div>
+    </div>
+    <div class="title">Scenario</div>
+    <div class="icons">
+      <img src="page_photo/home.png" alt="Home">
+      <img src="page_photo/user.png" alt="Profile">
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+
+    <!-- Scenario Cards -->
+    <div class="scenarios" id="scenarios"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    async function fetchScenarios() {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/scenario/');
+        if (!response.ok) {
+          throw new Error("Failed to fetch scenarios");
+        }
+
+        // all scenarios returned here
+        const scenarios = await response.json();
+
+        const container = document.getElementById('scenarios');
+        let count = 0
+        scenarios.forEach(scenario => {
+          count = count +1;
+          const div = document.createElement('div');
+          div.classList.add(`scenario-card`);
+
+          const scenarioImageSrc = scenario.scenarioImage
+                            ? `data:${scenario.scenarioImageType};base64,${scenario.scenarioImage}`
+                            : "background/null.png";
+
+          div.innerHTML =
+            `<div class="number">${count}</div>` + 
+            `<img src="${scenarioImageSrc}" alt="${scenario.image}">` +
+            `<h3>${scenario.name}</h3>` +
+            `<p>${scenario.scenarioDesc}</p>` +
+            `<a href="chatting.html?id=${scenario.id}"> <button onclick="startChat()">Start</button> </a>`;
+          container.appendChild(div);
+        });
+
+      } catch (error) {
+        console.error("Error fetching scenarios:", error);
+      }
+    }
+
+    $(document).ready(function () {
+      fetchScenarios();
+    });
+  </script>
+</body>
+
+</html>

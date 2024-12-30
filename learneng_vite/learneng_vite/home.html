@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Level</title>
+  <style>
+    /* Reset styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* Body */
+    body {
+      background-color: #f0f4fd;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      color: #333;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+      background-color: #799DEC;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .header .title {
+      color: #fff;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    /* Icons */
+    .header .icons {
+      display: flex;
+      align-items: center;
+    }
+
+    .header .icons img {
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-right: 10px;
+      filter: brightness(0) invert(1);
+    }
+
+    .header .icons img:hover {
+      transform: scale(1.1);
+    }
+
+    /* Main Section */
+    .content {
+      width: 100%;
+      text-align: center;
+      margin-top: 30px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Word */
+    .word {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #799DEC;
+    }
+
+    /* Level Cards Container */
+    .levels {
+      display: flex;
+      gap: 30px;
+      /* Increased gap between cards */
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* Level Card */
+    .level-card {
+      background: linear-gradient(135deg, #799DEC, #5a7fdb);
+      border-radius: 16px;
+      /* Increased border radius */
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      width: 280px;
+      /* Increased width */
+      text-align: center;
+      padding: 30px;
+      /* Increased padding */
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .level-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .level-card h3 {
+      font-size: 2rem;
+      /* Increased font size */
+      font-weight: bold;
+      margin-bottom: 15px;
+      /* Increased margin */
+    }
+
+    .level-card p {
+      font-size: 1.1rem;
+      /* Increased font size */
+      opacity: 0.8;
+      margin-bottom: 20px;
+      /* Increased margin */
+    }
+
+    .level-card .icon {
+      font-size: 3.5rem;
+      /* Increased icon size */
+      margin-bottom: 20px;
+      /* Increased margin */
+    }
+
+    .level-card .progress {
+      width: 100%;
+      height: 8px;
+      /* Thicker progress bar */
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+      /* Rounded corners */
+      overflow: hidden;
+      margin-bottom: 15px;
+      /* Increased margin */
+    }
+
+    .level-card .progress-bar {
+      height: 100%;
+      background-color: #fff;
+      border-radius: 4px;
+      /* Rounded corners */
+      width: 60%;
+      /* Example progress */
+    }
+
+    .level-card button {
+      background-color: #fff;
+      border: none;
+      padding: 12px 24px;
+      /* Larger button */
+      border-radius: 25px;
+      /* Rounded button */
+      font-size: 1.1rem;
+      /* Larger font size */
+      font-weight: bold;
+      color: #799DEC;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .level-card button:hover {
+      background-color: #f0f4fd;
+      color: #5a7fdb;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="icons">
+      <a href="welcome.html">
+        <img src="page_photo/back.png" alt="Back">
+      </a>
+    </div>
+    <div class="title">Home</div>
+    <div class="icons">
+      <img src="/page_photo/home.png" alt="Home">
+      <img src="/page_photo/user.png" alt="Profile">
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Header -->
+    <div class="word">Select Level to Practice</div>
+
+    <!-- Level Cards -->
+    <div class="levels" id="levels"></div>
+  </div>
+
+  <script>
+    async function fetchLevels() {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/level/');
+        if (!response.ok) {
+          throw new Error("Failed to fetch levels");
+        }
+
+        const levels = await response.json();
+        const container = document.getElementById('levels');
+
+        levels.forEach(level => {
+          const div = document.createElement('div');
+          div.classList.add('level-card');
+          div.innerHTML = `
+            <div class="icon">🎯</div>
+            <h3>${level.name}</h3>
+            <p>${level.description || "Test your skills!"}</p>
+            
+            <a href="scenario_page.html?level=${level.id}"><button>Start</button></a>
+          `;
+          container.appendChild(div);
+        });
+
+      } catch (error) {
+        console.error("Error fetching levels:", error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      fetchLevels();
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Body */
+        body {
+            background-color: #f0f4fd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            background-color: #ffffff;
+            color: #454545;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* Circle Buttons Container */
+        .circle-buttons-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 100px); /* Adjust height to take up remaining space after header */
+        }
+
+        /* Circle Buttons */
+        .circle-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Vertically center items */
+            width: 100%;
+        }
+
+        .circle-buttons a {
+            margin: 0 50px; /* Increase margin for bigger buttons */
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .circle-buttons img {
+            width: 400px; /* Bigger image size */
+            height: 400px; /* Bigger image size */
+            border-radius: 50%;
+            border: 5px solid #799DEC; /* Thicker border */
+            transition: transform 0.2s;
+        }
+
+        .circle-buttons img:hover {
+            transform: scale(1.1);
+        }
+
+        .circle-buttons span {
+            display: block;
+            margin-top: 15px; /* Increase margin for bigger text */
+            font-size: 50px; /* Bigger text */
+            font-weight: bold;
+            color: #333;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        WELCOME
+    </div>
+
+    <div class="circle-buttons-container">
+        <div class="circle-buttons">
+            <a href="editor-login.html">
+                <img style="border-color: #ecb279" src="page_photo/teacher.png" alt="Teacher">
+                <span>Teacher</span>
+            </a>
+            <a href="home.html">
+                <img src="/page_photo/learner2.png" alt="Learner">
+                <span>Learner</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
