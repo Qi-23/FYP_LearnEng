@@ -32,6 +32,16 @@ export default defineConfig({
             const { data } = req.body;
             res.json({ response: `Received: ${data}` });
         });
+        
+        api.post('/api/login', (req, res) => {
+            const { data } = req.body;
+            res.json({ response: `Received: ${data}` });
+        });
+        
+        api.post('/api/logout', (req, res) => {
+            const { data } = req.body;
+            res.json({ response: `Received: ${data}` });
+        });
 
         // Use express as middleware in the Vite dev server
         app.use('/api', api);
