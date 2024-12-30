@@ -28,11 +28,6 @@ export default defineConfig({
             res.json({ response: `Received: ${data}` });
         });
         
-        api.post('/api/UploadImage', (req, res) => {
-            const { data } = req.body;
-            res.json({ response: `Received: ${data}` });
-        });
-        
         api.post('/api/login', (req, res) => {
             const { data } = req.body;
             res.json({ response: `Received: ${data}` });

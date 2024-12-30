@@ -74,7 +74,7 @@ class ScenarioController(BaseHTTPRequestHandler):
                     scenario_data.update(image_data)
 
                     scenarios_dict.append(scenario_data)
-                        
+                    
                 except Exception as e:
                     logging.error(f"Error fetching images for scenario {scenario._id}: {str(e)}")
                     scenario_data.update({
@@ -93,15 +93,14 @@ class ScenarioController(BaseHTTPRequestHandler):
     def submit_scenario():
         try:
             scenarioID = request.form['scenarioID']
-            # scenarioImage = request.form['scenarioImage']
             scenarioName = request.form['scenarioName']
             scenarioDesc = request.form['scenarioDescription']
             characterDesc = request.form['characterDescription']
             vocab = request.form['vocab']
             grammar = request.form['grammar']
             situationalChat = request.form['situationalChat']
+            characterName = request.form['characterName']
             characterFileName = request.form['characterFileName']
-            # backgroundImage = request.form['backgroundImage']
             level = request.form['level']
             
             scenarioImage = request.files.get('scenarioImage')
@@ -113,12 +112,12 @@ class ScenarioController(BaseHTTPRequestHandler):
             try:
                 if(scenarioID):
                     # update scenario details
-                    scenario = Scenario(scenarioName, scenarioDesc, characterDesc, vocab, characterFileName, grammar, situationalChat, level, scenarioID, scenarioImage, backgroundImage)
+                    scenario = Scenario(scenarioName, scenarioDesc, characterDesc, vocab, grammar, situationalChat, characterName, characterFileName, level, scenarioImage, backgroundImage, scenarioID)
                     # print(scenario)
                     scenario.update_scenario()
                 else: 
                     # create new scenario
-                    scenario = Scenario(scenarioName, scenarioDesc, characterDesc, vocab, characterFileName, grammar, situationalChat, level, scenarioImage, backgroundImage)
+                    scenario = Scenario(scenarioName, scenarioDesc, characterDesc, vocab, grammar, situationalChat, characterName, characterFileName, level, scenarioImage, backgroundImage)
                     # print(scenario)
                     scenario.create_scenario()
                 

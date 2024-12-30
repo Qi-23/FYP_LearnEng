@@ -21,9 +21,16 @@ export const logout = async (req, res) => {
 
 export const isAuthenticated = (req, res, next) => {
     if (req.session.user) {
-        console.log("authenticated");
         next();
     } else {
         res.redirect('/unauthorized.html');
     }
 }
+
+export const isNotAuthenticated = (req, res, next) => {
+    if (req.session.user) {
+      res.redirect('/editor_scenario_page.html');
+    } else {
+      next();
+    }
+  };

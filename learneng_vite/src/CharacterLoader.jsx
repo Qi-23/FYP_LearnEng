@@ -14,7 +14,6 @@ function CharacterLoader() {
 
   const queryParams = new URLSearchParams(window.location.search);
   const id = queryParams.get("id");
-  console.log(id);
 
   const getScenario = async (id) => {
     if (id) {
@@ -27,6 +26,7 @@ function CharacterLoader() {
       });
       const scenarioData = await loadScenario.json();
 
+      $('.ai-name').html(scenarioData.scenario.characterName);
       setScenario(scenarioData.scenario);
       setCharacter(scenarioData.scenario.characterFileName)
       fetchBackgroundImage(scenarioData.scenario.id)

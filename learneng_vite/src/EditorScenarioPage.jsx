@@ -49,7 +49,6 @@ function EditorScenarioPage() {
             if (data.backgroundImage) {
               image.src = `data:${data.backgroundImageType};base64,${data.backgroundImage}`;
               backgroundImage.attr("src", image.src);
-              console.log(image.src)
             } else {
               backgroundImage.attr("src", "background/null.png");
             }
@@ -86,7 +85,6 @@ function EditorScenarioPage() {
               data: JSON.stringify({ id: id }),
               contentType: "application/json",
               success: function (response) {
-                console.log(response);
                 window.location.href = "/editor_scenario_page.html";
               },
               error: function (error) {
@@ -117,7 +115,9 @@ function EditorScenarioPage() {
   let grammar = $("#grammar")
   let situationalChat = $("#situationalChat")
   let backgroundImage = $("#selectedBackgroundImage")
+  let characterName = $("#characterName")
   let hiddenCharacter = $("#hiddenCharacter")
+
 
   useEffect(() => {
     if (scenario) {
@@ -134,16 +134,11 @@ function EditorScenarioPage() {
       grammar.val(scenario.grammar)
       situationalChat.val(scenario.situationalChat)
 
+      characterName.val(scenario.characterName)
       hiddenCharacter.val(scenario.characterFileName)
 
 
     } else {
-      // scenarioImage.attr("src", "page_photo/placeholder.png")
-      // scenarioName.val("scenario_xx")
-      // scenarioDescription.val("Create a hotel scenario which allow user to book a room")
-      // characterDescription.val("The ai character will act as a front desk officer in the hotel")
-
-      // scenarioImage.attr("src", "page_photo/placeholder.png")
 
       levelInput.val(currentLevel)
       displayLevel.text(currentLevelString)
@@ -154,6 +149,7 @@ function EditorScenarioPage() {
       vocab.val()
       grammar.val()
       situationalChat.val()
+      characterName.val()
       hiddenCharacter.val()
     }
   }, [currentLevel, scenario]);

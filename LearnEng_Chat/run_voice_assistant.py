@@ -515,29 +515,30 @@ def summarize_content(scenario=None, chat_history=None):
                 """vocab prompted : [""" + scenario._vocab + """], you should emphasize the vocab used within the conversation below in the vocab learned session. Replace nextline with backslash n""" + 
                  """Return with the format as below :
                  {
-                    "grammar_mistakes": "Grammar mistakes:
+                    "grammar_mistakes": 
+                    `Grammar mistakes:
                     1. **Type of mistake**
-                    * `Sentence of user role with mistake.`
-                        Correction: `Corrected version of the sentence`
-                        Note: `Grammar fixing note.`
-                    * `Sentence of user role with mistake.`
-                        Correction: `Corrected version of the sentence`
-                        Note: `Grammar fixing note.`
+                    * "Sentence of user role with mistake."
+                        Correction: "Corrected version of the sentence"
+                        Note: "Grammar fixing note."
+                    * "Sentence of user role with mistake."
+                        Correction: "Corrected version of the sentence"
+                        Note: "Grammar fixing note."
                    
                    2. **Type of mistake**
-                    * `Sentence of user role with mistake.`
-                        Correction: `Corrected version of the sentence`
-                        Note: `Grammar fixing note.`
+                    * "Sentence of user role with mistake."
+                        Correction: "Corrected version of the sentence"
+                        Note: "Grammar fixing note."
                    
                    3. **Type of mistake**
-                    * `Sentence of user role with mistake.`
-                        Correction: `Corrected version of the sentence`
-                        Note: `Grammar fixing note.`
-                    * `Sentence of user role with mistake.`
-                        Correction: `Corrected version of the sentence`
-                        Note: `Grammar fixing note.`
+                    * "Sentence of user role with mistake."
+                        Correction: "Corrected version of the sentence"
+                        Note: "Grammar fixing note."
+                    * "Sentence of user role with mistake."
+                        Correction: "Corrected version of the sentence"
+                        Note: "Grammar fixing note."
 
-                    ...",
+                    ...`,
 
                     "vocab_learned": [all the vocab learned here in an array format],
                     "points": 3  // Replace with the score out of 5
@@ -545,31 +546,31 @@ def summarize_content(scenario=None, chat_history=None):
 
                 Example response:
                 {
-                    "grammar_mistakes": "
+                    "grammar_mistakes": `
                     1. **Subject-Verb Agreement**
-                    * `Hi, I like to books a room for two night.`
-                        Correction: `Hi, I would like to book a room for two nights.`
-                        Note: `The subject 'I' requires the correct modal verb 'would like,' and 'books' should be the base form 'book.' Additionally, 'nights' should be plural for grammatical agreement.`
+                    * "Hi, I like to books a room for two night."
+                        Correction: "Hi, I would like to book a room for two nights."
+                        Note: "The subject 'I' requires the correct modal verb 'would like,' and 'books' should be the base form 'book.' Additionally, 'nights' should be plural for grammatical agreement."
 
                     2. **Verb-Subject Agreement**
-                    * `Is just me and my friend.`
-                        Correction: `It is just me and my friend.`
-                        Note: `The sentence lacks the subject 'It,' which is required to form a complete and grammatically correct sentence.`
+                    * "Is just me and my friend."
+                        Correction: "It is just me and my friend."
+                        Note: "The sentence lacks the subject 'It,' which is required to form a complete and grammatically correct sentence."
 
                     3. **Word Choice**
-                    * `Non smoke and mountain view if you have it.`
-                        Correction: `Non-smoking and a mountain view, if available.`
-                        Note: `The phrase 'Non smoke' should be 'Non-smoking,' and 'if you have it' is more appropriately rephrased as 'if available' for clarity and conciseness.`
+                    * "Non smoke and mountain view if you have it."
+                        Correction: "Non-smoking and a mountain view, if available."
+                        Note: "The phrase 'Non smoke' should be 'Non-smoking,' and 'if you have it' is more appropriately rephrased as 'if available' for clarity and conciseness."
 
                     4. **Missing Article**
-                    * `I'm Sarah Lee, and my phone 987654.`
-                        Correction: `I'm Sarah Lee, and my phone number is 987654.`
-                        Note: `The article 'number' is missing after 'phone,' and the verb 'is' is needed to complete the sentence.`
+                    * "I'm Sarah Lee, and my phone 987654."
+                        Correction: "I'm Sarah Lee, and my phone number is 987654."
+                        Note: "The article 'number' is missing after 'phone,' and the verb 'is' is needed to complete the sentence."
 
                     5. **Incorrect Preposition**
-                    * `That's great, thank for help me!`
-                        Correction: `That's great, thank you for helping me!`
-                        Note: `The preposition 'for' is required after 'thank,' and the correct phrase is 'helping me' instead of 'help me' to match the intended context.",
+                    * "That's great, thank for help me!"
+                        Correction: "That's great, thank you for helping me!"
+                        Note: "The preposition 'for' is required after 'thank,' and the correct phrase is 'helping me' instead of 'help me' to match the intended context.`,
                     
                     "vocab_learned": ["non-smoking", "clarity", "conciseness"],
                     "points": 4

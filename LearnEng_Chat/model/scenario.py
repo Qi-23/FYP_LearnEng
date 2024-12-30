@@ -13,11 +13,12 @@ class Scenario:
     _vocab = None
     _grammar = None
     _situationalChat = None
+    _characterName = None
     _characterFileName = None
     _backgroundImage = None
     _level = None
 
-    def __init__(self, name, scenarioDesc, characterDesc, vocab, characterFileName, grammar, situationalChat, level, id=None, image=None, backgroundImage=None):
+    def __init__(self, name, scenarioDesc, characterDesc, vocab, grammar, situationalChat, characterName, characterFileName, level, image=None, backgroundImage=None, id=None):
         self._id = id
         self._name = name
         self._image = image              # image path
@@ -26,6 +27,7 @@ class Scenario:
         self._vocab = vocab
         self._grammar = grammar
         self._situationalChat = situationalChat
+        self._characterName = characterName
         self._characterFileName = characterFileName
         self._backgroundImage = backgroundImage
         self._level = level if isinstance(level, Level) else self.getLevel(level)
@@ -68,6 +70,7 @@ class Scenario:
             "vocab": self._vocab,
             "grammar": self._grammar,
             "situationalChat": self._situationalChat,
+            "characterName" : self._characterName,
             "characterFileName": self._characterFileName,
             "level": self._level._id,
             "levelString": self._level._name
@@ -82,11 +85,12 @@ class Scenario:
         vocab = each['Vocab']
         grammar = each['Grammar']
         situationalChat = each['SituationalChat']
+        characterName = each['CharacterName']
         characterFileName = each['CharacterFileName']
         backgroundImage = each['BackgroundImage']
         level = each['LevelID']
 
-        scenarioObj = Scenario(name, scenarioDesc, characterDesc, vocab, characterFileName, grammar, situationalChat, level, id, image, backgroundImage)
+        scenarioObj = Scenario(name, scenarioDesc, characterDesc, vocab, grammar, situationalChat, characterName, characterFileName, level, image, backgroundImage, id)
         return scenarioObj
     
     def create_scenarioObj(self, result=None):
@@ -109,11 +113,10 @@ class Scenario:
     
     def create_scenario(self):
         insertQ = """
-        INSERT INTO Scenario (ScenarioName, ScenarioImage, ScenarioDescription, CharacterDescription, Vocab, Grammar, SituationalChat, CharacterFileName, BackgroundImage, LevelID)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO Scenario (ScenarioName, ScenarioImage, ScenarioDescription, CharacterDescription, Vocab, Grammar, SituationalChat, CharacterName, CharacterFileName, BackgroundImage, LevelID)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        print(insertQ, (self._name, 'image', self._scenarioDesc, self._characterDesc, self._vocab, self._grammar, self._situationalChat, self._characterFileName, 'backgroundImage', self._level._id))
-        DBConnection.execute_query(insertQ, (self._name, self._image, self._scenarioDesc, self._characterDesc, self._vocab, self._grammar, self._situationalChat, self._characterFileName, self._backgroundImage, self._level._id))
+        DBConnection.execute_query(insertQ, (self._name, self._image, self._scenarioDesc, self._characterDesc, self._vocab, self._grammar, self._situationalChat, self._characterName, self._characterFileName, self._backgroundImage, self._level._id))
 
     def update_scenario(self):
         if (not self._image and not self._backgroundImage):
@@ -128,11 +131,10 @@ class Scenario:
     def update_scenario_with_images(self):
         updateQ = """
         UPDATE Scenario
-        SET ScenarioName = %s, ScenarioImage = %s, ScenarioDescription = %s, CharacterDescription = %s, Vocab = %s, Grammar = %s, SituationalChat = %s, CharacterFileName = %s, BackgroundImage = %s
+        SET ScenarioName = %s, ScenarioImage = %s, ScenarioDescription = %s, CharacterDescription = %s, Vocab = %s, Grammar = %s, SituationalChat = %s, CharacterName = %s, CharacterFileName = %s, BackgroundImage = %s
         WHERE ScenarioID = %s
         """
-        print(updateQ, (self._name, 'image', self._scenarioDesc, self._characterDesc, self._vocab, self._grammar, self._situationalChat, self._characterFileName, "backgroundImage", self._id))
-        DBConnection.execute_query(updateQ, (self._name, self._image, self._scenarioDesc, self._characterDesc, self._vocab, self._grammar, self._situationalChat, self._characterFileName, self._backgroundImage, self._id))
+        DBConnection.execute_query(updateQ, (self._name, self._image, self._scenarioDesc, self._characterDesc, self._vocab, self._grammar, self._situationalChat, self._characterName, self._characterFileName, self._backgroundImage, self._id))
         
     def update_scenario_without_images(self):
         updateQ = """

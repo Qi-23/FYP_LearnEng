@@ -69,34 +69,43 @@
                             </div>
                             <div class="textfield w-100">
                                 <div class="form-group row mb-3">
-                                    <label class="col-md-3" for="scenarioName">Name</label>
+                                    <label class="col-md-3" for="scenarioName">Name&nbsp;<span
+                                            class="text-danger">*</span></label>
                                     <div class="col-md-9">
                                         <input class="form-control" type="text" id="scenarioName" name="scenarioName"
-                                            value="">
+                                            value="" required>
+                                        <span class="text-danger d-none ps-1">Field is required.</span>
                                     </div>
                                 </div>
                                 <div class="form-group row mb-3">
-                                    <label class="col-md-3" for="scenarioDescription">Scenario Description</label>
+                                    <label class="col-md-3" for="scenarioDescription">Scenario Description&nbsp;<span
+                                            class="text-danger">*</span></label>
                                     <div class="col-md-9">
                                         <textarea class="form-control" id="scenarioDescription" rows="3"
                                             placeholder="Create a hotel scenario which allows the learner to book a room."
-                                            name="scenarioDescription"></textarea>
+                                            name="scenarioDescription" required></textarea>
+                                        <span class="text-danger d-none ps-1">Field is required.</span>
                                     </div>
                                 </div>
                                 <div class="form-group row mb-3">
-                                    <label class="col-md-3" for="characterDescription">Character Description</label>
+                                    <label class="col-md-3" for="characterDescription">Character Description&nbsp;<span
+                                            class="text-danger">*</span></label>
                                     <div class="col-md-9 input-group">
                                         <textarea class="rounded-0 rounded-top form-control w-100"
                                             id="characterDescription" rows="3"
                                             placeholder="The ai character will act as a front desk officer in the hotel."
-                                            name="characterDescription"></textarea>
+                                            name="characterDescription" required></textarea>
+                                        <span class="text-danger d-none ps-1">Field is required.</span>
                                     </div>
                                 </div>
                                 <div class="form-group row mb-3">
-                                    <label class="col-md-3" for="vocab">Vocabularies</label>
+                                    <label class="col-md-3" for="vocab">Vocabularies&nbsp;<span
+                                            class="text-danger">*</span></label>
                                     <div class="col-md-9">
                                         <textarea class="form-control" id="vocab" rows="1"
-                                            placeholder="Reservation, Availability, Occupancy" name="vocab"></textarea>
+                                            placeholder="Reservation, Availability, Occupancy" name="vocab"
+                                            required></textarea>
+                                        <span class="text-danger d-none ps-1">Field is required.</span>
                                     </div>
                                 </div>
                                 <div class="form-group row mb-3">
@@ -117,7 +126,8 @@
                             </div>
 
                             <div class="d-flex justify-content-end w-100 pt-3 border-top end-field">
-                                <button class="delete-btn btn btn-outline-danger rounded-pill px-5 d-none">Delete</button>
+                                <button
+                                    class="delete-btn btn btn-outline-danger rounded-pill px-5 d-none">Delete</button>
                                 <div class="d-flex justify-content-end">
                                     <a class="btn px-5 link rounded-pill"
                                         href="http://localhost:5137/editor_scenario_page.html">Cancel</a>
@@ -141,13 +151,25 @@
                                 <div id="loadCharacter" style="height: 25rem"></div>
                             </div>
                             <div class="col-md-6 ps-5">
-                                <div class="btn-group">
-                                    <select class="form-select" id="character-select">
-                                    </select>
+                                <div class="form-group row mb-3">
+                                    <label class="col-md-4" for="characterName">Character Name&nbsp;<span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control bg-white border" id="characterName"
+                                            rows="1" placeholder="Joseph" name="characterName"></input>
+                                        <span class="text-danger d-none ps-1">Field is required.</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label class="col-md-4" for="character-select">Character File</label>
+                                    <div class="col-md-8 btn-group">
+                                        <select class="form-select" id="character-select">
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="backgroundImage mb-4 mt-4">
                                     <div>
-                                        <label class="form-control mb-2 px-1"
+                                        <label class="form-control mb-2 px-0"
                                             style="background-color: transparent;">Background Image : </label>
                                         <img class="rounded mb-3" id="selectedBackgroundImage" src="background/null.png"
                                             alt="Background Image" style="width: 300px;" />
@@ -199,37 +221,49 @@
             }
         }
 
-        // function uploadScenarioImage(imageType, imageFile) {
-        //     const imageFormData = new FormData();
-        //     imageFormData.append('scenarioImage', imageFile);
-        //     imageFormData.append('imageType', imageType);
-
-        //     fetch('/api/UploadImage', { // Adjust API route if necessary
-        //         method: 'POST',
-        //         body: imageFormData,
-        //     })
-        //         .then((response) => response.json())
-        //         .then((data) => {
-        //             if (data.error) {
-        //                 console.error('Upload failed:', data.error);
-        //                 alert('Error: ' + data.error);
-        //             } else {
-        //                 console.log('Image uploaded successfully:', data);
-        //                 alert('Image uploaded successfully: ' + data.filePath);
-        //             }
-        //         })
-        //         .catch((error) => {
-        //             console.error('Error uploading image:', error);
-        //             alert('Error: ' + error.message);
-        //         });
-        // }
-
         $(document).ready(function () {
-            // $("header").load("editor-header-nav.html")
 
-            $("#go-to-configCharacter").on("click", function () {
-                $("#character-tab").click()
-            })
+            $('#go-to-configCharacter').on('click', function (e) {
+                e.preventDefault();
+
+                const scenarioName = $('#scenarioName');
+                const errorSpan = scenarioName.next('span');
+
+                if (scenarioName.val().trim() === '') {
+                    errorSpan.removeClass('d-none');
+                } else {
+                    errorSpan.addClass('d-none');
+                }
+
+                const requiredTextareaFields = $('textarea[required]');
+                let isValid = true;
+
+                requiredTextareaFields.each(function () {
+                    const field = $(this);
+                    const errorSpan = field.next('span');
+
+                    if (field.val().trim() === '') {
+                        isValid = false;
+                        errorSpan.removeClass('d-none');
+                    } else {
+                        errorSpan.addClass('d-none');
+                    }
+                });
+
+                if (isValid) {
+                    $("#character-tab").click()
+                }
+            });
+
+            $('textarea[required]').on('input', function () {
+                const errorSpan = $(this).next('span');
+                errorSpan.addClass('d-none');
+            });
+            $('input[required]').on('input', function () {
+                const errorSpan = $(this).next('span');
+                errorSpan.addClass('d-none');
+            });
+
             var lastScroll = 0;
             window.addEventListener("scroll", function () {
                 var editorHeader = document.querySelector(".editor-header");
@@ -260,34 +294,31 @@
                     formData.append('characterFileName', "MaleCharacter1")
                 }
 
-                // if (backgroundImage.files[0]) {
-                // uploadScenarioImage('backgroundImage', backgroundImage.files[0]);
                 formData.append('backgroundImage', backgroundImage.files[0]);
-                // }
 
                 var scenarioImageFileInput = $('#scenarioImage')[0];
-                console.log("ScenarioImage")
                 formData.delete('scenarioImage');
                 formData.append('scenarioImage', scenarioImageFileInput.files[0]);
-                console.log(formData['scenarioImage'])
-                console.log("BackgroundImage")
-                console.log(backgroundImage.files[0])
-                console.log(formData['backgroundImage'])
-
-                console.log(formData)
-
+                formData.append('characterName', $('#characterName').val());
+                
                 $.ajax({
                     type: 'POST',
                     url: 'http://127.0.0.1:5000/scenario/submit_scenario',
                     data: formData,
-                    contentType: false, // Required for FormData
+                    contentType: false,
                     processData: false,
+                    success: function (response) {
+                        alert('Scenario saved successfully!');
+                        if (!formData.get('scenarioID')) {
+                            window.location.href = `editor_scenario_page.html?level=${formData.get('level')}`;
+                        } else {
+                            location.reload();
+                        }
+                    },
                     error: function (xhr) {
                         alert('Error: ' + xhr.responseText);
                     }
-                    // success here
                 })
-                location.reload();
             });
 
             $(".dropdown-item").each(function (index, element) {
@@ -299,7 +330,17 @@
         });
 
         $("#btn-submit_form").on("click", function () {
-            $("#submitScenario").click();
+            valid = false;
+            const characterName = $('#characterName');
+            const errorSpan = characterName.next('span');
+
+            if (characterName.val().trim() === '') {
+                errorSpan.removeClass('d-none');
+            } else {
+                valid = true
+                errorSpan.addClass('d-none');
+            }
+            if (valid) {$("#submitScenario").click();}
         });
 
         document.getElementById('logoutButton').addEventListener('click', async () => {

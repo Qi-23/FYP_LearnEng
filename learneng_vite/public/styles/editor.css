@@ -48,9 +48,9 @@ body {
 .btn-outline-primary.dropdown-toggle.show,
 .dropdown-item:focus,
 .dropdown-item:active {
-    color: #fff;
-    background-color: #d2bfa9;
-    border-color: #d2bfa9;
+    color: #fff !important;
+    background-color: #d2bfa9 !important;
+    border-color: #d2bfa9 !important;
 }
 
 .btn-primary:hover {
