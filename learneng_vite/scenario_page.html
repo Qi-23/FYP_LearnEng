@@ -196,8 +196,12 @@
     </div>
     <div class="title">Scenario</div>
     <div class="icons">
-      <img src="page_photo/home.png" alt="Home">
-      <img src="page_photo/user.png" alt="Profile">
+      <a href="home.html">
+        <img src="page_photo/home.png" alt="Home">
+      </a>
+      <a href="index.html">
+        <img src="page_photo/user.png" alt="Profile">
+      </a>
     </div>
   </div>
 
@@ -210,30 +214,54 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
+    // Function to get query parameter from URL
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
     async function fetchScenarios() {
       try {
-        const response = await fetch('http://127.0.0.1:5000/scenario/');
+        // Get levelId from URL
+        const levelId = getQueryParam('level');
+
+        // Fetch level information only if levelId is not null
+        let levelName = "";
+        if (levelId) {
+          const levelResponse = await fetch(`http://127.0.0.1:5000/level/${levelId}`);
+          if (!levelResponse.ok) {
+            throw new Error("Failed to fetch level");
+          }
+          const level = await levelResponse.json();
+          levelName = level.name;
+          console.log(levelName)
+          // Update level-indicator text
+          document.getElementById('levelIndicator').innerText = levelName;
+        }
+
+        const response = await fetch(`http://127.0.0.1:5000/scenario?level=${levelId}`);
+
         if (!response.ok) {
           throw new Error("Failed to fetch scenarios");
         }
 
-        // all scenarios returned here
         const scenarios = await response.json();
-
         const container = document.getElementById('scenarios');
-        let count = 0
+        let count = 0;
+
         scenarios.forEach(scenario => {
-          count = count +1;
+          count++;
           const div = document.createElement('div');
           div.classList.add(`scenario-card`);
 
+          // Use the scenario image data if available, otherwise use a default image or leave it blank
           const scenarioImageSrc = scenario.scenarioImage
-                            ? `data:${scenario.scenarioImageType};base64,${scenario.scenarioImage}`
-                            : "background/null.png";
+            ? `data:${scenario.scenarioImageType};base64,${scenario.scenarioImage}`
+            : 'background/null.png'; // Replace 'path/to/default/image.jpg' with the path to your default image
 
           div.innerHTML =
-            `<div class="number">${count}</div>` + 
-            `<img src="${scenarioImageSrc}" alt="${scenario.image}">` +
+            `<div class="number">${count}</div>` +
+            `<img src="${scenarioImageSrc}" alt="Scenario Image">` + // Use scenarioImageSrc here
             `<h3>${scenario.name}</h3>` +
             `<p>${scenario.scenarioDesc}</p>` +
             `<a href="chatting.html?id=${scenario.id}"> <button onclick="startChat()">Start</button> </a>`;

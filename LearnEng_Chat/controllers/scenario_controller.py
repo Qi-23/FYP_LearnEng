@@ -59,10 +59,11 @@ class ScenarioController(BaseHTTPRequestHandler):
                 "scenarioImageType": None,
                 "backgroundImageType": None
             }
-
+       
     @scenario_controller.route('/', methods=['GET'])
     def scenarioList():
         try:
+            level_id = request.args.get('level', type=int)
             scenarios = Scenario.fetch_all()
             scenarios_dict = []
 
@@ -72,9 +73,12 @@ class ScenarioController(BaseHTTPRequestHandler):
 
                     image_data = ScenarioController.fetch_scenario_images(scenario._id)
                     scenario_data.update(image_data)
+                    if level_id:
+                      if scenario._level._id == level_id:
+                        scenarios_dict.append(scenario_data)
+                    else:
+                      scenarios_dict.append(scenario_data)
 
-                    scenarios_dict.append(scenario_data)
-                    
                 except Exception as e:
                     logging.error(f"Error fetching images for scenario {scenario._id}: {str(e)}")
                     scenario_data.update({
@@ -83,6 +87,11 @@ class ScenarioController(BaseHTTPRequestHandler):
                         "scenarioImageType": None,
                         "backgroundImageType": None
                     })
+                    if level_id:
+                      if scenario._level._id == level_id:
+                        scenarios_dict.append(scenario_data)
+                    else:
+                      scenarios_dict.append(scenario_data)
 
             return jsonify(scenarios_dict)
        
