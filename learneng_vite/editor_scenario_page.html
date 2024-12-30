@@ -10,30 +10,51 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="styles/editor.css">
+    <style>
+        .card img {
+            object-fit: cover;
+            height: 200px; /* Fix the height for consistent image size */
+        }
+        .card-body {
+            padding: 15px;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            min-height: 50px; /* Ensure consistent title height */
+        }
+        .card-text {
+            min-height: 80px; /* Make sure description text height is consistent */
+            font-size: 1rem;
+            color: #555;
+        }
+        .card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="editor-header navbar navbar-expand-lg navbar-light px-5 py-2">
-        <!-- <a class="navbar-brand" href="#">Logo or something</a> -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <nav class="editor-header navbar navbar-expand-lg navbar-light px-3 py-2">
+        <div class="d-flex justify-content-end w-100">
+            <button id="logoutButton" class="btn btn-outline-danger">Logout</button>
+        </div>
     </nav>
 
     <div class="py-4 px-3 w-100">
         <div class="d-flex justify-content-between col-12">
             <div class="col-6 d-flex justify-content-start">
                 <h2>Scenarios</h2>
-                <a class="ms-4 btn btn-primary px-4 rounded-pill" href="/scenario/scenario_configuration?level=1"
-                    id="add-scenario">Add</a>
+                <a class="ms-4 btn btn-primary px-4 rounded-pill"
+                    href="/scenario_configuration.html?levelValue=1&level=easy" id="add-scenario">Add</a>
             </div>
             <select class="w-25 form-select" id="level-selection">
-                <option value="1">Level 1</option>
-                <option value="2">Level 2</option>
-                <option value="3">Level 3</option>
-                <option value="4">Level 4</option>
-                <option value="5">Level 5</option>
+                <option value="1">Easy</option>
+                <option value="2">Medium</option>
+                <option value="3">Hard</option>
             </select>
         </div>
         <div class="d-flex justify-content-center flex-wrap mt-4 mx-4" id="scenarios">
@@ -47,7 +68,6 @@
 
         <script>
             async function fetchScenarios() {
-                console.log("hihi")
                 try {
                     const response = await fetch('http://127.0.0.1:5000/scenario/');
                     if (!response.ok) {
@@ -56,9 +76,6 @@
 
                     const scenarios = await response.json();
 
-                    // Log the scenarios to check
-                    console.log(scenarios);
-
                     // Example: Add them to a div
                     const container = document.getElementById('scenarios');
                     scenarios.forEach(scenario => {
@@ -66,13 +83,17 @@
                         div.classList.add(`levelClass`, `level-${scenario.level}`, `d-none`, 'card', 'mx-3', 'mb-4');
                         div.style.width = "300px";
 
-                        div.innerHTML = 
-                        `<div class="card-body">` +
-                        `<img src="page_photo/${scenario.image}" class="w-100 mb-2" alt="Scenario Image">` +
-                        `<h5 class="card-title">Scenario: ${scenario.name}</h5>` +
-                        `<p class="card-text">${scenario.description}</p>` +
-                        `<a href="http://127.0.0.1:5000/scenario/scenario_configuration?id=${scenario.id}" class="btn btn-primary">Edit</a>` +
-                        `</div>`;
+                        const scenarioImageSrc = scenario.scenarioImage
+                            ? `data:${scenario.scenarioImageType};base64,${scenario.scenarioImage}`
+                            : "background/null.png";
+
+                            div.innerHTML =
+                                `<div class="card-body">` +
+                                `<img id="scenarioImage-${scenario.id}" class="w-100 mb-2" alt="Scenario Image" src="${scenarioImageSrc}">` +
+                                `<h5 class="card-title">Scenario: ${scenario.name}</h5>` +
+                                `<p class="card-text">${scenario.description}</p>` +
+                                `<a href="/scenario_configuration.html?id=${scenario.id}" class="btn btn-primary">Edit</a>` +
+                                `</div>`;
 
                         container.appendChild(div);
                     });
@@ -89,11 +110,17 @@
             }
 
             $(document).ready(function () {
+                const level_string = {
+                    1: "Easy",
+                    2: "Medium",
+                    3: "Hard"
+                };
+
                 $("#level-selection").on("change", function () {
                     let count = 0
                     let level_value = $(this).val()
                     $("#no-scenario").addClass("d-none")
-                    var newHref = "/scenario/scenario_configuration?level=" + level_value;
+                    var newHref = "/scenario_configuration.html?levelValue=" + level_value + "&level=" + level_string[level_value];
                     $('#add-scenario').attr('href', newHref);
 
                     $(".card").each(function () {
@@ -114,6 +141,26 @@
 
                 fetchScenarios();
 
+                document.getElementById('logoutButton').addEventListener('click', async () => {
+                    try {
+                        const response = await fetch('/api/logout', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        const result = await response.json();
+                        if (response.ok) {
+                            window.location.href = '/index.html'; // Redirect to login page after logout
+                        } else {
+                            alert(result.message);
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('An error occurred. Please try again.');
+                    }
+                });
             });
         </script>
 </body>

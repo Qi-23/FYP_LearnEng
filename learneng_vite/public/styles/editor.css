@@ -64,6 +64,22 @@ body {
     border-color: #c48848;
 }
 
+.btn-outline-secondary:hover {
+    color: #2b2b2b;
+    background-color: #c2c2c2;
+    border-color: #dbc8b0;
+}
+
+.btn-outline-danger:hover, .btn-outline-danger:focus, .btn-outline-danger:active {
+    color: #f0f0f0;
+    background-color: #e56d6d;
+}
+
+.btn-head-primary:hover, .btn-head-primary:focus, .btn-head-primary:active {
+    color: #fff;
+    background-color: #d5af87;
+}
+
 .btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active {
     /* color: #c48848; */
     border-color: #c48848;

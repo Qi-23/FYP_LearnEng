@@ -13,12 +13,16 @@
 </head>
 
 <body>
-    <nav class="editor-header navbar navbar-expand-lg navbar-light px-5 py-2">
+    <nav class="editor-header navbar navbar-expand-lg navbar-light px-3 py-2">
         <!-- <a class="navbar-brand" href="#">Logo or something</a> -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button>
+        </button> -->
+        <div class="d-flex justify-content-end w-100">
+            <a href="/editor_scenario_page.html" class="btn me-3 btn-head-primary">Home</a>
+            <button id="logoutButton" class="btn btn-outline-danger">Logout</button>
+        </div>
     </nav>
     <div class="d-flex mt-4 justify-content-center pb-3">
         <div class="card col-md-10 border-0 shadow-sm">
@@ -41,8 +45,8 @@
                             <h3 class="card-title mb-0">
                                 Scenario Configuration
                             </h3>
-                            <button class="btn btn-sc-level rounded-pill px-4" id="displayLevel" disabled>Level
-                                x</button>
+                            <button class="btn btn-sc-level rounded-pill px-4 text-capitalize" id="displayLevel"
+                                disabled>Level</button>
                         </div>
                         <form class="d-flex justify-content-center flex-wrap" id="scenarioForm"
                             action="{{ url_for('scenario_controller.submit_scenario') }}" method="POST">
@@ -112,13 +116,16 @@
 
                             </div>
 
-                            <div class="d-flex justify-content-end w-100">
-                                <a class="btn px-5 link rounded-pill"
-                                    href="http://localhost:5137/editor_scenario_page.html">Cancel</a>
-                                <button type="button" class="btn btn-primary px-5 rounded-pill"
-                                    id="go-to-configCharacter">Configure Character</button>
-                                <button type="submit" class="btn btn-primary px-5 rounded-pill d-none"
-                                    id="submitScenario">Save</button>
+                            <div class="d-flex justify-content-end w-100 pt-3 border-top end-field">
+                                <button class="delete-btn btn btn-outline-danger rounded-pill px-5 d-none">Delete</button>
+                                <div class="d-flex justify-content-end">
+                                    <a class="btn px-5 link rounded-pill"
+                                        href="http://localhost:5137/editor_scenario_page.html">Cancel</a>
+                                    <button type="button" class="btn btn-primary px-5 rounded-pill"
+                                        id="go-to-configCharacter">Configure Character</button>
+                                    <button type="submit" class="btn btn-primary px-5 rounded-pill d-none"
+                                        id="submitScenario">Save</button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -131,7 +138,7 @@
                         <div class="d-flex justify-content-center flex-wrap">
                             <div class="col-md-6">
                                 <div id="characterConfigure"></div>
-                                <div id="loadCharacter" style="height: 28rem"></div>
+                                <div id="loadCharacter" style="height: 25rem"></div>
                             </div>
                             <div class="col-md-6 ps-5">
                                 <div class="btn-group">
@@ -140,7 +147,8 @@
                                 </div>
                                 <div class="backgroundImage mb-4 mt-4">
                                     <div>
-                                        <label class="form-control mb-2 px-1" style="background-color: transparent;" >Background Image : </label>
+                                        <label class="form-control mb-2 px-1"
+                                            style="background-color: transparent;">Background Image : </label>
                                         <img class="rounded mb-3" id="selectedBackgroundImage" src="background/null.png"
                                             alt="Background Image" style="width: 300px;" />
                                     </div>
@@ -156,10 +164,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-end w-100">
-                            <a class="btn px-5 link rounded-pill"
-                                href="http://localhost:5137/editor_scenario_page.html">Cancel</a>
-                            <button id="btn-submit_form" class="btn btn-primary px-5 rounded-pill">Save</button>
+                        <div class="d-flex justify-content-end w-100 pt-3 border-top end-field">
+                            <button class="delete-btn btn btn-outline-danger rounded-pill px-5 d-none">Delete</button>
+                            <div class="d-flex justify-content-end w-100">
+                                <a class="btn px-5 link rounded-pill"
+                                    href="http://localhost:5137/editor_scenario_page.html">Cancel</a>
+                                <button id="btn-submit_form" class="btn btn-outline-secondary px-5 rounded-pill"
+                                    disabled>Save</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -167,7 +179,6 @@
         </div>
     </div>
 
-    <!-- <script type="module" src="/src/scenarioConfigure.jsx"></script> -->
     <script type="module" src="/src/configureCharacter.jsx"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -182,29 +193,36 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     selectedImage.src = e.target.result;
+                    console.log(e.target.result)
                 };
                 reader.readAsDataURL(fileInput.files[0]);
             }
         }
 
-        function uploadScenarioImage(imageType, imageFile) {
-            const imageFormData = new FormData();
-            console.log(imageFile)
-            imageFormData.append('scenarioImage', imageFile);
-            imageFormData.append('imageType', imageType);
+        // function uploadScenarioImage(imageType, imageFile) {
+        //     const imageFormData = new FormData();
+        //     imageFormData.append('scenarioImage', imageFile);
+        //     imageFormData.append('imageType', imageType);
 
-            fetch('http://localhost:5137/api/UploadImage', { // Adjust API route if necessary
-                method: 'POST',
-                body: imageFormData,
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Image uploaded:', data.filePath);
-                })
-                .catch(error => {
-                    console.error('Upload error:', error);
-                });
-        }
+        //     fetch('/api/UploadImage', { // Adjust API route if necessary
+        //         method: 'POST',
+        //         body: imageFormData,
+        //     })
+        //         .then((response) => response.json())
+        //         .then((data) => {
+        //             if (data.error) {
+        //                 console.error('Upload failed:', data.error);
+        //                 alert('Error: ' + data.error);
+        //             } else {
+        //                 console.log('Image uploaded successfully:', data);
+        //                 alert('Image uploaded successfully: ' + data.filePath);
+        //             }
+        //         })
+        //         .catch((error) => {
+        //             console.error('Error uploading image:', error);
+        //             alert('Error: ' + error.message);
+        //         });
+        // }
 
         $(document).ready(function () {
             // $("header").load("editor-header-nav.html")
@@ -233,19 +251,6 @@
 
                 var formData = new FormData(this);
 
-                if (formData.has('scenarioImage')) {
-                    formData.delete('scenarioImage');
-                }
-
-                var scenarioImageFileInput = $('#scenarioImage')[0];
-                console.log(scenarioImageFileInput.files[0])
-                if (scenarioImageFileInput.files.length > 0) {
-                    formData.append('scenarioImage', scenarioImageFileInput.files[0].name);
-                    uploadScenarioImage('scenarioImage', scenarioImageFileInput.files[0]);
-                } else {
-                    formData.append('scenarioImage', $('#selectedImage').attr('src').replace('page_photo/', ''));
-                }
-
                 console.log("character: " + $("#character-select").val())
                 if ($("#character-select").val() != null) {
                     formData.append('characterFileName', $("#character-select").val())
@@ -255,19 +260,19 @@
                     formData.append('characterFileName', "MaleCharacter1")
                 }
 
-                var backgroundImage = $('#backgroundImage')[0];
-                if (!backgroundImage.files[0]) {
-                    var imgSrc = $('#selectedBackgroundImage').attr('src');
-                    var updatedSrc = imgSrc.replace('background/', '');
-                    uploadScenarioImage('backgroundImage', backgroundImage.files[0]);
-                    if (updatedSrc == "null.png") {
-                        formData.append('backgroundImage', null);
-                    } else {
-                        formData.append('backgroundImage', updatedSrc);
-                    }
-                } else {
-                    formData.append('backgroundImage', backgroundImage.files[0].name);
-                }
+                // if (backgroundImage.files[0]) {
+                // uploadScenarioImage('backgroundImage', backgroundImage.files[0]);
+                formData.append('backgroundImage', backgroundImage.files[0]);
+                // }
+
+                var scenarioImageFileInput = $('#scenarioImage')[0];
+                console.log("ScenarioImage")
+                formData.delete('scenarioImage');
+                formData.append('scenarioImage', scenarioImageFileInput.files[0]);
+                console.log(formData['scenarioImage'])
+                console.log("BackgroundImage")
+                console.log(backgroundImage.files[0])
+                console.log(formData['backgroundImage'])
 
                 console.log(formData)
 
@@ -297,7 +302,26 @@
             $("#submitScenario").click();
         });
 
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
+                const result = await response.json();
+                if (response.ok) {
+                    window.location.href = '/index.html'; // Redirect to login page after logout
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
     </script>
 </body>
 

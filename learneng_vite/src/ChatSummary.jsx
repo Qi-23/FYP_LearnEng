@@ -4,37 +4,40 @@ function ChatSummary() {
 
   const [loading, setLoading] = useState(false);
   const summarizedRef = useRef(false);
-  const generating = useRef(false);
+
+  const queryParams = new URLSearchParams(window.location.search);
+  const id = queryParams.get("id");
 
   const getSummary = async () => {
     if (!summarizedRef.current) {
       setLoading(true);
       summarizedRef.current = true;
-      generating.current = true;
+      console.log("summarizing")
       $("#summary-area").removeClass("d-none");
-      const response = await fetch("/api/SummarizeContent");
+        const response = await fetch("/api/SummarizeContent", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: id })
+        });
+    
+
       let formattedResponse = ""
       if (response.ok) {
-        // $("#summary-area").removeClass("d-none");
-        const data = (await response.json()).summarized_content;
-        formattedResponse = data.replace(/\n/g, '</br>');
+        data = await response.json()
+        const summary = data.summarized_content;
+        formattedResponse = summary.replace(/\n/g, '</br>');
         formattedResponse = formattedResponse.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        formattedResponse = formattedResponse.replace(/\*([\s\S]+?)(?:<\/br>|$)/g, '<ul class="list-dot"><li>$1</li></ul>');
-        formattedResponse = formattedResponse.replace(/\+([\s\S]+?)<\/br>/g, '<ul class="list-circle" style="padding-left: 20px;"><li>$1</li></ul>');
+        formattedResponse = formattedResponse.replace(/\*([\s\S]+?)(?:<\/br>|$)/g, '<ul class="mb-0 list-dot"><li>$1</li></ul>');
+        formattedResponse = formattedResponse.replace(/\+([\s\S]+?)<\/br>/g, '<ul class="mb-0 list-circle" style="padding-left: 20px;"><li>$1</li></ul>');
+        formattedResponse = formattedResponse.replace(/â€™/g, "'");
         setLoading(false);
         $("#summarizedContent").html(formattedResponse);
       }
-      generating.current = false;
       setLoading(false);
     }
   };
-
-  const summarizeAgain = () => {
-    if (!generating.current) {
-      summarizedRef.current = false;
-      getSummary();
-    }
-  }
 
   useEffect(() => {
     if (loading) {
@@ -46,13 +49,10 @@ function ChatSummary() {
 
   useEffect(() => {
     const summary_btn = document.querySelector('.summary-btn');
-    const summary_again_btn = document.querySelector('#btn-summarize_again');
     summary_btn.addEventListener('click', getSummary);
-    summary_again_btn.addEventListener('click', summarizeAgain);
 
     return () => {
       summary_btn.removeEventListener('click', getSummary);
-      summary_again_btn.removeEventListener('click', summarizeAgain);
     };
   }, []);
 

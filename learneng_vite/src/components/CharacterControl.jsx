@@ -5,35 +5,45 @@ import { Character } from "./Character"; // Assuming you have your Character com
 import { useThree } from "@react-three/fiber";
 import { useChat } from "../hooks/useChat";
 
-export const CharacterControl = () => {
+export const CharacterControl = ({ character, backgroundImage }) => {
   const cameraControls = useRef();
-  const backgroundTexture = useTexture("/page_photo/hotelFrontDesk.png");
+  const [backgroundTexture, setBackgroundTexture] = useState(null);
   const [isTextureLoaded, setIsTextureLoaded] = useState(false);
 
-  const { camera, viewport } = useThree(); 
+  const { camera, viewport } = useThree();
   const { width: viewportWidth, height: viewportHeight } = viewport;
-  
+
   const { loading } = useChat();
   const [loadingText, setLoadingText] = useState("");
   const response = useRef("");
 
   useEffect(() => {
-    if (backgroundTexture) {
-      setIsTextureLoaded(true);
+    if (backgroundImage && typeof backgroundImage === "string") {
+      if (backgroundImage.startsWith("data:image/")) {
+        const texture = new THREE.TextureLoader().load(backgroundImage);
+        setBackgroundTexture(texture);
+        setIsTextureLoaded(true);
+      } else {
+        console.error("Invalid base64 image format.");
+        setIsTextureLoaded(false);
+      }
+    } else {
+      console.error("backgroundImage is not a valid string.");
+      setIsTextureLoaded(false);
     }
-  }, [backgroundTexture]);
+  }, [backgroundImage]);
 
   useEffect(() => {
     const controls = cameraControls.current;
     controls.setLookAt(0, 1.5, 5, 0, 1.7, 0);
   }, []);
 
-  const fov = camera.fov * (Math.PI / 180); 
+  const fov = camera.fov * (Math.PI / 180);
   const aspect = viewportWidth / viewportHeight;
-  const distance = 5; 
-  const imageHeight = 2 * Math.tan(fov / 2) * distance; 
-  const imageWidth = imageHeight * aspect; 
-  const scaleFactor = 1.5; 
+  const distance = 5;
+  const imageHeight = 2 * Math.tan(fov / 2) * distance;
+  const imageWidth = imageHeight * aspect;
+  const scaleFactor = 1.5;
   const scaledImageHeight = imageHeight * scaleFactor;
   const scaledImageWidth = imageWidth * scaleFactor;
   const cameraDirection = new THREE.Vector3();
@@ -72,7 +82,7 @@ export const CharacterControl = () => {
         });
       }
     }, [loading]);
-    
+
     if (!loading) return null;
     return (
       <group {...props}>
@@ -95,7 +105,7 @@ export const CharacterControl = () => {
     controls.maxPolarAngle = Math.PI / 2;
 
     controls.minAzimuthAngle = -Math.PI / 4;
-    controls.maxAzimuthAngle = Math.PI / 4; 
+    controls.maxAzimuthAngle = Math.PI / 4;
 
     controls.minAzimuthAngle = 0;
     controls.maxAzimuthAngle = 0;
@@ -106,8 +116,7 @@ export const CharacterControl = () => {
       <CameraControls ref={cameraControls} />
       <Environment preset="sunset" />
 
-      {/* Wait for texture to load before rendering the background */}
-      {isTextureLoaded && (
+      {isTextureLoaded && backgroundTexture && (
         <Suspense fallback={<mesh><boxGeometry /><meshBasicMaterial color="gray" /></mesh>}>
           <Dots position-y={1.85} position-x={-0.09} />
           <mesh position={imagePosition.toArray()}>
@@ -116,8 +125,9 @@ export const CharacterControl = () => {
           </mesh>
         </Suspense>
       )}
-
-      <Character />
+      {character && (
+        <Character key={character} character={character} />
+      )}
     </>
   );
 };

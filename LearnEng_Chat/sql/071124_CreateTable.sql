@@ -45,14 +45,14 @@ CREATE TABLE LevelEditor (
 CREATE TABLE Scenario (
   ScenarioID  	INT AUTO_INCREMENT,
   ScenarioName  VARCHAR(255) NOT NULL,
-  ScenarioImage TEXT NOT NULL,
+  ScenarioImage MEDIUMBLOB,
   ScenarioDescription 	TEXT NOT NULL,
   CharacterDescription 	TEXT NOT NULL,
   Vocab         TEXT NOT NULL,
   Grammar         TEXT NOT NULL,
   SituationalChat         TEXT NOT NULL,
   CharacterFileName   VARCHAR(255) NOT NULL,
-  BackgroundImage VARCHAR(255),
+  BackgroundImage MEDIUMBLOB,
   LevelID 	INT,
   PRIMARY KEY (ScenarioID),
   FOREIGN KEY (LevelID) REFERENCES Level(LevelID)

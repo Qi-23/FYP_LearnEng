@@ -23,11 +23,17 @@ const corresponding = {
 };
 
 let setupMode = false;
-
-export function Character(props) {
-  const { nodes, materials, scene } = useGLTF(
-    "/models/MaleCharacter1.glb"
-  );
+export function Character(character, ...props) {
+  if (character.character == null) {
+    console.warn("No character")
+    return null;
+  }
+  if (typeof character.character !== 'string') {
+    console.warn("Invalid character prop, expected a string but got:", typeof character.character);
+    console.log(character.character)
+    return null;  // Or display a default fallback
+  }
+  const { nodes, materials, scene } = useGLTF(`/models/${character.character}.glb`);
   
   const { message, onMessagePlayed, allowNextChat } = useChat();
   const [lipsync, setLipsync] = useState();

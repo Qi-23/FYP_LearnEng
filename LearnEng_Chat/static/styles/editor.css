@@ -39,6 +39,17 @@ body {
     border-color: #dbc8b0;
 }
 
+
+.btn-outline-secondary {
+    color: #000000 !important;
+}
+
+.btn-outline-secondary:hover {
+    color: #000000 !important;
+    background-color: #cbcbcb !important;
+    border-color: #dbc8b0 !important;
+}
+
 .btn-outline-primary.dropdown-toggle:focus {
     background-color: #fff;
 }
