@@ -1,11 +1,5 @@
-DROP TABLE Summary;
-DROP TABLE LearnerScenario;
-DROP TABLE Learner;
-DROP TABLE VirtualCharacter;
 DROP TABLE Scenario;
-DROP TABLE LevelEditor;
 DROP TABLE Level;
-DROP TABLE Voice;
 DROP TABLE Editor;
 
 CREATE TABLE Editor (
@@ -13,8 +7,6 @@ CREATE TABLE Editor (
   Username 	VARCHAR(255) UNIQUE NOT NULL,
   Password	VARCHAR(255) NOT NULL,
   Email 	VARCHAR(255) UNIQUE,
-  Status 	VARCHAR(255),
-  StatusUpdatedDate 	DATE,
   PRIMARY KEY (EditorID)
 );
 

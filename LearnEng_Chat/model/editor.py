@@ -9,16 +9,12 @@ class Editor:
     _username = None
     _password = None
     _email = None
-    _status = None
-    _statusUpdateDate = None
 
-    def __init__ (self, username, password, email, status=None, statusUpdatedDate=None, id=None) :
+    def __init__ (self, username, password, email, id=None) :
         self._id = id
         self._username = username
         self._password = password
         self._email = email
-        self._status = status
-        self._statusUpdatedDate = statusUpdatedDate
 
     def create_editorObj(self, result=None):
         if result is None or result is []:
@@ -29,10 +25,8 @@ class Editor:
             username = result['Username']
             password = result['Password']
             email = result['Email']
-            status = result['Status']
-            statusUpdatedDate = result['StatusUpdatedDate']
 
-            editorObj = Editor(username, password, email, status, statusUpdatedDate, id)
+            editorObj = Editor(username, password, email, id)
             return editorObj
         
         elif (isinstance(result, list)):
@@ -43,10 +37,8 @@ class Editor:
                     username = each['Username']
                     password = each['Password']
                     email = each['Email']
-                    status = each['Status']
-                    statusUpdatedDate = each['StatusUpdatedDate']
 
-                    editorObj = Editor(username, password, email, status, statusUpdatedDate, id)
+                    editorObj = Editor(username, password, email, id)
                     editorObjList.append(editorObj)
             return editorObjList
         
