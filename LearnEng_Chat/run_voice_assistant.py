@@ -485,7 +485,7 @@ def init_empty():
     new_user_input = ""
     last_response = ""
 
-def summarize_content(scenario=None, chat_history=None):
+def summarize_content(chat_history=None):
     """
     Generates a summary of the chat conversation, focusing on grammar mistakes.
     """
@@ -511,12 +511,9 @@ def summarize_content(scenario=None, chat_history=None):
         summarizing_history = [
             {
                 "role": "system",
-                "content": """ Summarize the performance of role user only in term of their grammar mistake according to this conversation. Strictly follow the format as shown below, MUST return as a JSON like format shown below.""" + 
-                """vocab prompted : [""" + scenario._vocab + """], you should emphasize the vocab used within the conversation below in the vocab learned session. Replace nextline with backslash n""" + 
+                "content": """ Summarize the performance of role user only in term of their grammar mistake according to this conversation. Strictly follow the format as shown below. If the Grammar error is none, no need to show.""" + 
                  """Return with the format as below :
-                 {
-                    "grammar_mistakes": 
-                    `Grammar mistakes:
+                    Grammar mistakes:
                     1. **Type of mistake**
                     * "Sentence of user role with mistake."
                         Correction: "Corrected version of the sentence"
@@ -538,15 +535,9 @@ def summarize_content(scenario=None, chat_history=None):
                         Correction: "Corrected version of the sentence"
                         Note: "Grammar fixing note."
 
-                    ...`,
-
-                    "vocab_learned": [all the vocab learned here in an array format],
-                    "points": 3  // Replace with the score out of 5
-                }
+                    ...`
 
                 Example response:
-                {
-                    "grammar_mistakes": `
                     1. **Subject-Verb Agreement**
                     * "Hi, I like to books a room for two night."
                         Correction: "Hi, I would like to book a room for two nights."
@@ -570,11 +561,7 @@ def summarize_content(scenario=None, chat_history=None):
                     5. **Incorrect Preposition**
                     * "That's great, thank for help me!"
                         Correction: "That's great, thank you for helping me!"
-                        Note: "The preposition 'for' is required after 'thank,' and the correct phrase is 'helping me' instead of 'help me' to match the intended context.`,
-                    
-                    "vocab_learned": ["non-smoking", "clarity", "conciseness"],
-                    "points": 4
-                }
+                        Note: "The preposition 'for' is required after 'thank,' and the correct phrase is 'helping me' instead of 'help me' to match the intended context."
                 """
             }
         ]
@@ -617,6 +604,7 @@ def summarize_content(scenario=None, chat_history=None):
             json.dump(response_text, file)
             print(f"Content saved to {summarized_content_file}")
 
+        logging.info(response_text)
         return jsonify({"summarized_content": response_text})
 
     except Exception as e:

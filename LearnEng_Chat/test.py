@@ -99,30 +99,13 @@ def update_status_to_ended():
 
 @app.route('/get_summarized_content', methods=['GET'])
 def get_summarized_content():
-    try:
-        global chat_history
-        scenarioID = request.args.get('id', type=int)
-        scenario = Scenario.fetch_by_id(scenarioID)
-        if not chat_history:
-            response = summarize_content(scenario).get_json()
-        else:
-            response = summarize_content(scenario, chat_history).get_json()
-
-        logging.info(Fore.RED + response.get('summarized_content', '') + Fore.RESET)
-        response_content = response.get('summarized_content', '')
-        parsed_response = parse_response(response_content)
-        grammar_mistakes = parsed_response.get('grammar_mistakes', '')
-        vocab_learned = parsed_response.get('vocab_learned', [])
-        points = parsed_response.get('points', 0)
-
-        logging.info(Fore.CYAN + f"Grammar Mistakes: {grammar_mistakes}" + Fore.RESET)
-        logging.info(Fore.CYAN + f"Vocabulary Learned: {vocab_learned}" + Fore.RESET)
-        logging.info(Fore.CYAN + f"Points: {points}" + Fore.RESET)
-        
-        return grammar_mistakes
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    global chat_history
+    if not chat_history:
+        response = summarize_content().get_json()
+    else:
+        response = summarize_content(chat_history).get_json()
+    logging.info(Fore.CYAN + "Response: " + response['summarized_content'] + Fore.RESET)
+    return response
 
 def getScenarioInfo():
     try:
@@ -133,15 +116,6 @@ def getScenarioInfo():
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-def parse_response(response_string):
-    try:
-        # Convert string to JSON-like object
-        parsed_response = json.loads(response_string)
-        return parsed_response
-    except json.JSONDecodeError as e:
-        logging.error(f"Error decoding response: {e}")
-        return None
 
 if __name__ == '__main__':
     app.run(debug=True)
