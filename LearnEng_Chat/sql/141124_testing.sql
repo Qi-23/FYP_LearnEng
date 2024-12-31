@@ -1,4 +1,4 @@
-INSERT INTO Editor VALUES (NULL, 'xx', 'xx', 'xx@gmail.com', NULL, NULL);
+INSERT INTO Editor VALUES (NULL, 'Teacher', 'pass123', 'xx@gmail.com');
 INSERT INTO Level VALUES (1, 'Easy');
 INSERT INTO Level VALUES (2, 'Medium');
 INSERT INTO Level VALUES (3, 'Hard');
