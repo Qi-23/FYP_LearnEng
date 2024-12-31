@@ -2,11 +2,28 @@ import session from 'express-session';
 
 export const login = async (req, res) => {
     const { username, password } = req.body;
-    if (username === 'editor' && password === '123') {
+
+    const response = await fetch("http://127.0.0.1:5000/editor/login", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: username, password: password })
+    });
+    
+    
+    if (!response.ok) {
+        throw new Error("Failed to authorize user");
+    }
+    const data = await response.json();
+    const authorized = data.authorized;
+    console.log(authorized);
+
+    if (authorized) {
         req.session.user = username;
         res.status(200).json({ message: 'Login successful', redirect: '/editor_scenario_page.html' });
     } else {
-        res.status(401).json({ message: 'Invalid credentials' });
+        res.status(401).json({ message: 'Invalid username or password' });
     }
 }
 
