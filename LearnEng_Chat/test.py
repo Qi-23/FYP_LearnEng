@@ -93,8 +93,14 @@ def get_status():
 @app.route('/update_status_to_ended', methods=['POST'])
 def update_status_to_ended():
     global request_end
+    global chat_history
     request_end = True
-    update_chat_status("ended")
+
+    if not chat_history:  
+        update_chat_status("ended")
+    else:
+        update_chat_status("ended", chat_history)
+      
     return jsonify("success")
 
 @app.route('/get_summarized_content', methods=['GET'])

@@ -74,7 +74,7 @@ function CharacterLoader() {
   return (
     <>
       <Loader />
-      <Canvas shadows camera={{ position: [0, 0, 1], fov: 6, aspect: window.innerWidth / window.innerHeight }}>
+      <Canvas shadows camera={{ position: [0, 0, 1], fov: 6 }}>
         <CharacterControl character={character} backgroundImage={backgroundImageSrc}/>
       </Canvas>
     </>

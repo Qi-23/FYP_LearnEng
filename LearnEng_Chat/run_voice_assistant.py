@@ -453,10 +453,18 @@ def get_chat_status():
     global status
     return status
 
-def update_chat_status(new_status):
+def update_chat_status(new_status, chat_history=None):
     global status
     global request_end
     status = new_status
+    
+    file_path = "../learneng_vite/public/audios/"
+    chat_history_file = file_path + "chat_history.json"
+
+    if chat_history:
+        with open(chat_history_file, "w") as file:
+            json.dump(chat_history, file)
+
     if new_status == "ended":
         request_end = True
 
@@ -512,56 +520,67 @@ def summarize_content(chat_history=None):
             {
                 "role": "system",
                 "content": """ Summarize the performance of role user only in term of their grammar mistake according to this conversation. Strictly follow the format as shown below. If the Grammar error is none, no need to show.""" + 
-                 """Return with the format as below :
+                 """Return as below if no role user input :
+                    You haven't chat in this scenario yet.
+
+                    OR
+                    
+                    Return with the format as below :
                     Grammar mistakes:
                     1. **Type of mistake**
                     * "Sentence of user role with mistake."
-                        Correction: "Corrected version of the sentence"
-                        Note: "Grammar fixing note."
+                    +  Correction: "Corrected version of the sentence"
+                    +  Note: "Grammar fixing note."
                     * "Sentence of user role with mistake."
-                        Correction: "Corrected version of the sentence"
-                        Note: "Grammar fixing note."
+                    +  Correction: "Corrected version of the sentence"
+                    +  Note: "Grammar fixing note."
                    
                    2. **Type of mistake**
                     * "Sentence of user role with mistake."
-                        Correction: "Corrected version of the sentence"
-                        Note: "Grammar fixing note."
+                    +  Correction: "Corrected version of the sentence"
+                    +  Note: "Grammar fixing note."
                    
                    3. **Type of mistake**
                     * "Sentence of user role with mistake."
-                        Correction: "Corrected version of the sentence"
-                        Note: "Grammar fixing note."
+                    +  Correction: "Corrected version of the sentence"
+                    +  Note: "Grammar fixing note."
                     * "Sentence of user role with mistake."
-                        Correction: "Corrected version of the sentence"
-                        Note: "Grammar fixing note."
+                    +  Correction: "Corrected version of the sentence"
+                    +  Note: "Grammar fixing note."
 
                     ...`
+                
+                Example response (if no role user input):
+                    You haven't chat in this scenario yet.
+
+                OR
 
                 Example response:
                     1. **Subject-Verb Agreement**
                     * "Hi, I like to books a room for two night."
-                        Correction: "Hi, I would like to book a room for two nights."
-                        Note: "The subject 'I' requires the correct modal verb 'would like,' and 'books' should be the base form 'book.' Additionally, 'nights' should be plural for grammatical agreement."
+                    +  Correction: "Hi, I would like to book a room for two nights."
+                    +  Note: "The subject 'I' requires the correct modal verb 'would like,' and 'books' should be the base form 'book.' Additionally, 'nights' should be plural for grammatical agreement."
 
                     2. **Verb-Subject Agreement**
                     * "Is just me and my friend."
-                        Correction: "It is just me and my friend."
-                        Note: "The sentence lacks the subject 'It,' which is required to form a complete and grammatically correct sentence."
+                    +  Correction: "It is just me and my friend."
+                    +  Note: "The sentence lacks the subject 'It,' which is required to form a complete and grammatically correct sentence."
 
                     3. **Word Choice**
                     * "Non smoke and mountain view if you have it."
-                        Correction: "Non-smoking and a mountain view, if available."
-                        Note: "The phrase 'Non smoke' should be 'Non-smoking,' and 'if you have it' is more appropriately rephrased as 'if available' for clarity and conciseness."
+                    +  Correction: "Non-smoking and a mountain view, if available."
+                    +  Note: "The phrase 'Non smoke' should be 'Non-smoking,' and 'if you have it' is more appropriately rephrased as 'if available' for clarity and conciseness."
 
                     4. **Missing Article**
                     * "I'm Sarah Lee, and my phone 987654."
-                        Correction: "I'm Sarah Lee, and my phone number is 987654."
-                        Note: "The article 'number' is missing after 'phone,' and the verb 'is' is needed to complete the sentence."
+                    +  Correction: "I'm Sarah Lee, and my phone number is 987654."
+                    +  Note: "The article 'number' is missing after 'phone,' and the verb 'is' is needed to complete the sentence."
 
                     5. **Incorrect Preposition**
                     * "That's great, thank for help me!"
-                        Correction: "That's great, thank you for helping me!"
-                        Note: "The preposition 'for' is required after 'thank,' and the correct phrase is 'helping me' instead of 'help me' to match the intended context."
+                    +  Correction: "That's great, thank you for helping me!"
+                    +  Note: "The preposition 'for' is required after 'thank,' and the correct phrase is 'helping me' instead of 'help me' to match the intended context."
+                
                 """
             }
         ]
