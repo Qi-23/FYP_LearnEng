@@ -1,5 +1,4 @@
 from dao.dbConnection import DBConnection
-import logging
 
 class Editor: 
     _tableName = "Editor"
@@ -60,23 +59,12 @@ class Editor:
         return editorObj
     
     @classmethod
-    def fetch_by_username(self, search_username):
-        queryUsername = f"SELECT * FROM {self._tableName} WHERE {self._usernameCol} = '{search_username}'"
-        logging.info(queryUsername)
+    def fetch_by_name(self, search_username):
+        queryUsername = f"SELECT * FROM Level WHERE {self._usernameCol} = '{search_username}'"
         result = DBConnection.fetch_one(queryUsername)
 
         editorObj = self.create_editorObj(self, result)
         return editorObj
-    
-    @classmethod
-    def check_authentication(cls, username, password):
-        editor = cls.fetch_by_username(username)
-        if not editor:
-            return False
-        if editor._password == password:
-            return True
-        else :
-            return False
     
     def __str__(self):
         return f"Id: {self._id} \nUsername: {self._username} \nPassword: {self._password} \nEmail: {self._email}"
