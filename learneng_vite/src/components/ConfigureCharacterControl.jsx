@@ -14,19 +14,15 @@ export const ConfigureCharacterControl = ({selectedCharacter}) => {
     const controls = cameraControls.current;
     controls.setLookAt(0, 1.5, 5, 0, 1.7, 0);
 
-    // Restrict camera movement
     controls.minDistance = 5;
-    controls.maxDistance = 5; // Fix zoom level
+    controls.maxDistance = 5;
 
-    // Restrict vertical and horizontal rotation (with broader ranges)
-    controls.minPolarAngle = Math.PI / 2; // 30 degrees (downward)
-    controls.maxPolarAngle = Math.PI / 2; // 90 degrees (upward)
+    controls.minPolarAngle = Math.PI / 2;
+    controls.maxPolarAngle = Math.PI / 2;
+    controls.minAzimuthAngle = -Math.PI / 4;
+    controls.maxAzimuthAngle = Math.PI / 4;
 
-    // Restrict horizontal rotation if needed
-    controls.minAzimuthAngle = -Math.PI / 4; // -45 degrees
-    controls.maxAzimuthAngle = Math.PI / 4;  // 45 degrees
-
-    controls.minAzimuthAngle = 0; // Limit left/right rotation
+    controls.minAzimuthAngle = 0;
     controls.maxAzimuthAngle = 0;
   }, []);
 
@@ -69,3 +65,4 @@ export const ConfigureCharacterControl = ({selectedCharacter}) => {
     </>
   );
 };
+
