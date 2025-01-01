@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { CameraControls, Environment, Text, useTexture } from "@react-three/drei";
 import * as THREE from "three";
-import { Character } from "./Character"; // Assuming you have your Character component
+import { Character } from "./Character";
 import { useThree } from "@react-three/fiber";
 import { useChat } from "../hooks/useChat";
 
