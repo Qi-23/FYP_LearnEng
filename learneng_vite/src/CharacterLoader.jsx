@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 function CharacterLoader() {
 
-  const { getResponse, getChatStatus, nextChat, setChatEnded } = useChat();
+  const { getResponse, getChatStatus, nextChat } = useChat();
   const [scenario, setScenario] = useState(null);
   const [character, setCharacter] = useState(null);
   const [init, setInit] = useState();
@@ -69,12 +69,6 @@ function CharacterLoader() {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    $("#endBtn").on("click", function () {
-      setChatEnded();
-    })
   }, []);
 
   return (
