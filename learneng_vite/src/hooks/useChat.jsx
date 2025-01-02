@@ -7,6 +7,7 @@ export const ChatProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [chatStatus, setChatStatus] = useState(false);
   const [nextChat, setNextChat] = useState();
+  const [ended, setEnded] = useSate(false);
 
   const getResponse = async (type, id=null) => {
     setNextChat(false);
@@ -40,9 +41,13 @@ export const ChatProvider = ({ children }) => {
   }
 
   const allowNextChat = () => {
-    if (!nextChat) {
+    if (!nextChat && !ended) {
       setNextChat(true);
     }
+  }
+
+  const setChatEnded = () => {
+    setEnded(true);
   }
 
   const onMessagePlayed = () => {
@@ -75,7 +80,8 @@ export const ChatProvider = ({ children }) => {
         getChatStatus,
         chatStatus,
         allowNextChat,
-        nextChat
+        nextChat,
+        setChatEnded
       }}
     >
       {children}
