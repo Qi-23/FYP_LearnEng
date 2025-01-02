@@ -28,13 +28,12 @@ export const ChatProvider = ({ children }) => {
   };
 
   const getChatStatus = async () => {
-    if (!ended){
     const response = await fetch("http://127.0.0.1:5000/get_status", { method: 'GET' });
     const data = await response.json()
     let status = data.chat_status;
     if (status != chatStatus) {
       setChatStatus(status);
-    }}
+    }
   }
 
   const updateChatStatusToNone = async () => {
