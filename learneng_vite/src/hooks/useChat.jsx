@@ -7,7 +7,7 @@ export const ChatProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [chatStatus, setChatStatus] = useState(false);
   const [nextChat, setNextChat] = useState();
-  const [ended, setEnded] = useSate(false);
+  const [ended, setEnded] = useState(false);
 
   const getResponse = async (type, id=null) => {
     setNextChat(false);
