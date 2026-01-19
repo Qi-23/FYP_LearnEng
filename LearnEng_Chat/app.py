@@ -19,7 +19,8 @@ from model.level import Level
 app = Flask(__name__)
 CORS(app)
 
-controllers_dir = './controllers'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+controllers_dir = os.path.join(BASE_DIR, "controllers")
 
 for filename in os.listdir(controllers_dir):
 

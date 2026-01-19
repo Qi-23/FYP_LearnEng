@@ -5,7 +5,7 @@ const ChatContext = createContext();
 export const ChatProvider = ({ children }) => {
   const [message, setMessage] = useState();
   const [loading, setLoading] = useState(false);
-  const [chatStatus, setChatStatus] = useState(false);
+  const [chatStatus, setChatStatus] = useState("");
   const [nextChat, setNextChat] = useState();
 
   const getResponse = async (type, id=null) => {
@@ -27,13 +27,24 @@ export const ChatProvider = ({ children }) => {
   };
 
   const getChatStatus = async () => {
-    const response = await fetch("http://127.0.0.1:5000/get_status", { method: 'GET' });
-    const data = await response.json()
-    let status = data.chat_status;
-    if (status != chatStatus) {
-      setChatStatus(status);
+    if (chatStatus != "ended") {
+      const response = await fetch("http://127.0.0.1:5000/get_status", { method: 'GET' });
+      const data = await response.json()
+      let status = data.chat_status;
+      // console.log(chatStatus);
+      // console.log(status);
+      if (status != chatStatus) {
+        setChatStatus(status);
+        console.log("Chat status updated to: " + status);
+        console.log("status != chatStatus : " + (status != chatStatus));
+      }
     }
   }
+
+  useEffect(() => {
+    console.log(chatStatus);
+
+  }, [chatStatus]);
 
   const updateChatStatusToNone = async () => {
     await fetch("http://127.0.0.1:5000/update_status_to_none", { method: 'POST' });

@@ -127,7 +127,7 @@ class Level:
 
     @classmethod
     def fetch_all(self):
-        queryAll = f"SELECT * FROM {self._tableName}"
+        queryAll = f"SELECT * FROM {self._tableName} ORDER BY LevelID"
         result = DBConnection.fetch_all(queryAll)
         levelObjList = self.create_levelObj(self, result)
         return levelObjList
